@@ -1,2 +1,0 @@
-# impissed
-im hate gihub
