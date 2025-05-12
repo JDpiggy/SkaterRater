@@ -6,10 +6,12 @@ body {
     color: #d0d0ff; /* Light lavender */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* Align center for taller content */
     min-height: 100vh;
-    overflow: hidden; /* Important for full-screen animations */
-    position: relative; /* For positioning animated elements */
+    padding: 20px 0; /* Add some padding if content is very tall */
+    overflow-x: hidden; /* Prevent horizontal scroll from minor overflows */
+    overflow-y: auto;   /* Allow vertical scroll if content overflows */
+    position: relative;
 }
 
 /* --- Background Animation --- */
@@ -24,73 +26,89 @@ body {
     position: absolute;
     background-color: white;
     border-radius: 50%;
-    opacity: 0; /* Start invisible, fade in */
+    opacity: 0;
     animation: fallAndTwinkle 10s linear infinite;
 }
 @keyframes fallAndTwinkle {
     0% { transform: translateY(-10vh) scale(0.5); opacity: 0; }
-    10% { opacity: 0.7; transform: scale(1); } /* Fade in */
-    90% { opacity: 0.7; transform: scale(1); } /* Twinkle period */
+    10% { opacity: 0.7; transform: scale(1); }
+    90% { opacity: 0.7; transform: scale(1); }
     95% { transform: scale(0.8); opacity: 0.5;}
     100% { transform: translateY(110vh) scale(0.5); opacity: 0; }
 }
 
 /* --- Main Container --- */
 .container {
-    background: rgba(20, 20, 50, 0.85); /* Translucent dark blue */
+    background: rgba(20, 20, 50, 0.85);
     backdrop-filter: blur(8px);
-    padding: 25px 30px;
+    padding: 20px 25px; /* Slightly adjusted padding */
     border-radius: 25px;
     border: 2px solid rgba(100, 100, 200, 0.5);
     box-shadow: 0 0 40px rgba(120, 120, 255, 0.3), inset 0 0 20px rgba(0,0,0,0.4);
-    width: 95%;
-    max-width: 900px;
+    width: 90%;
+    max-width: 1100px; /* Increased max-width for wider layout */
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    position: relative; /* For particle container context */
+    gap: 20px; /* Adjusted gap */
+    position: relative;
     z-index: 1;
 }
 
 header { text-align: center; }
 h1 {
-    color: #82aaff; /* Brighter, cool blue */
+    color: #82aaff;
     text-shadow: 0 0 8px #82aaff, 0 0 16px #82aaff, 0 0 2px #fff;
-    margin-bottom: 20px;
-    font-size: 2.8em;
+    margin-bottom: 15px; /* Adjusted margin */
+    font-size: 2.5em; /* Slightly adjusted font size */
     letter-spacing: 1px;
 }
 
 /* --- Stats Display --- */
 .stats-display {
     background: rgba(30, 30, 70, 0.7);
-    padding: 12px 18px;
+    padding: 10px 15px; /* Adjusted padding */
     border-radius: 12px;
     display: flex;
     justify-content: space-around;
     border: 1px solid rgba(80, 80, 150, 0.6);
-    margin-bottom: 25px;
+    margin-bottom: 20px; /* Adjusted margin */
 }
-.stats-display p { font-size: 1.15em; color: #c0c0ff; display: flex; align-items: center; gap: 8px;}
-.stats-display span[id] { color: #f0e060; /* Goldish yellow for numbers */ font-weight: bold; }
+.stats-display p { font-size: 1.1em; color: #c0c0ff; display: flex; align-items: center; gap: 8px;}
+.stats-display span[id] { color: #f0e060; font-weight: bold; }
 .icon-shape.stardust-icon {
     width: 16px; height: 16px;
     background-color: #f0e060;
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); /* Star shape */
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* --- NEW: Game Content Wrapper for side-by-side layout --- */
+.game-content-wrapper {
+    display: flex;
+    flex-direction: row; /* Side-by-side by default */
+    gap: 25px; /* Gap between main click area and upgrades panel */
+    width: 100%;
 }
 
 /* --- Main Interaction: Click Area --- */
-main { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+main {
+    flex: 1; /* Takes 1 part of the available space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    min-width: 250px; /* Ensure it doesn't get too squished */
+}
 .click-area {
     position: relative;
-    width: 180px; height: 180px;
+    width: 180px; height: 180px; /* Keep click target size consistent */
     display: flex; justify-content: center; align-items: center;
     margin-bottom: 10px;
+    margin-top: 20px; /* Add some top margin if needed */
 }
-#click-target { /* The main clickable shape */
+#click-target {
     width: 150px; height: 150px;
-    background: radial-gradient(circle, #c89aff 0%, #9370db 60%, #6a0dad 100%); /* Purpleish gradient */
-    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* Organic blob shape */
+    background: radial-gradient(circle, #c89aff 0%, #9370db 60%, #6a0dad 100%);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     cursor: pointer;
     transition: transform 0.1s ease, box-shadow 0.2s ease, border-radius 0.3s ease;
     box-shadow: 0 0 20px #9370db, 0 0 35px #9370db, inset 0 0 15px rgba(255,220,255,0.4);
@@ -101,26 +119,25 @@ main { display: flex; flex-direction: column; align-items: center; gap: 15px; }
     50% { transform: scale(1.05); border-radius: 50% 50% 40% 60% / 60% 40% 50% 50%; }
 }
 #click-target:hover {
-    transform: scale(1.08) !important; /* Override animation for hover */
+    transform: scale(1.08) !important;
     box-shadow: 0 0 30px #c89aff, 0 0 50px #c89aff, inset 0 0 20px rgba(255,220,255,0.6);
 }
 #click-target:active {
     transform: scale(0.92) !important;
     background: radial-gradient(circle, #e6ceff 0%, #bca0f7 60%, #824bc2 100%);
-    animation: none; /* Pause pulse on active */
+    animation: none;
 }
 
-/* Click Feedback (Sparks & Text) */
 #click-feedback-container {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none;
 }
-.click-spark { /* Shape for click visual */
+.click-spark {
     position: absolute;
-    width: 10px; height: 20px; /* Tall, thin shard */
+    width: 10px; height: 20px;
     background-color: #f0e060;
     opacity: 0.9;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* Triangle */
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
     transform-origin: bottom center;
     animation: shootSpark 0.6s ease-out forwards;
 }
@@ -128,83 +145,100 @@ main { display: flex; flex-direction: column; align-items: center; gap: 15px; }
     0% { transform: scale(0.5) rotate(var(--angle)) translateY(0); opacity: 1; }
     100% { transform: scale(1.5) rotate(var(--angle)) translateY(-80px); opacity: 0; }
 }
-.click-text-feedback { /* For the +N text */
+.click-text-feedback {
     position: absolute;
     font-size: 1.6em; color: #f0e060; font-weight: bold;
     animation: fadeUpText 0.7s ease-out forwards;
     text-shadow: 0 0 5px black; transform: translateX(-50%);
 }
-@keyframes fadeUpText { /* Same as before, just ensure it's defined */
+@keyframes fadeUpText {
     from { opacity: 1; transform: translate(-50%, 0); }
     to { opacity: 0; transform: translate(-50%, -60px); }
 }
 
 /* --- Stardust Particle Flow --- */
 #stardust-particle-flow-container {
-    position: absolute; /* Relative to main.container */
-    bottom: 100px; /* Position it below click area, above upgrades panel usually */
+    /* This is positioned relative to .container, which is the main game box */
+    position: absolute;
+    bottom: 80px; /* Adjusted position, particles originate from lower-mid of game box */
     left: 50%;
     transform: translateX(-50%);
-    width: 80%; height: 150px; /* Area from which particles seem to originate */
+    width: 80%; height: 120px; /* Adjust size as needed */
     pointer-events: none;
-    z-index: 5;
+    z-index: 5; /* Ensure it's above the main content but below popups if any */
 }
 .stardust-particle {
     position: absolute;
     width: 8px; height: 8px;
     background-color: #f0e060;
-    border-radius: 2px; /* More crystalline */
+    border-radius: 2px;
     box-shadow: 0 0 6px #f0e060, 0 0 3px #fff;
-    opacity: 0; /* Start invisible */
-    /* Animation set by JS */
+    opacity: 0;
 }
-
 
 /* --- Upgrades & Generators Panel --- */
 .upgrades-panel {
-    display: grid; /* Using grid for better layout options */
-    grid-template-columns: 1fr; /* Default for mobile */
+    flex: 2; /* Takes 2 parts of the available space, making it wider than main */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust minmax as needed */
     gap: 20px;
     background: rgba(30, 30, 70, 0.4);
-    padding: 20px;
+    padding: 15px; /* Adjusted padding */
     border-radius: 15px;
+    min-width: 300px; /* Ensure it doesn't get too squished */
 }
-@media (min-width: 768px) { /* For wider screens */
-    .upgrades-panel { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+/* Responsive stacking for game content */
+@media (max-width: 800px) { /* Adjust breakpoint as needed */
+    .game-content-wrapper {
+        flex-direction: column; /* Stack main and aside */
+    }
+    main {
+        width: 100%; /* Take full width when stacked */
+        margin-bottom: 20px;
+    }
+    .upgrades-panel {
+        width: 100%; /* Take full width when stacked */
+    }
+    .click-area { margin-top: 0;}
+    #stardust-particle-flow-container { bottom: 120px; /* May need adjustment when stacked */ }
 }
+
 
 .upgrades-section, .generators-section {
     padding: 15px;
     border: 1px solid rgba(80, 80, 150, 0.5);
     border-radius: 10px;
     background: rgba(25,25,60,0.5);
+    display: flex; /* Added to help manage internal layout if needed */
+    flex-direction: column; /* Ensure content flows top-to-bottom */
 }
 .upgrades-section h2, .generators-section h2 {
-    color: #a2c2ff; /* Light blue title */
+    color: #a2c2ff;
     margin-bottom: 15px;
     display: flex; align-items: center; gap: 10px;
-    font-size: 1.6em;
+    font-size: 1.5em; /* Adjusted font size */
     border-bottom: 1px solid rgba(100,100,200,0.3);
     padding-bottom: 8px;
 }
-/* General Icon Shapes */
 .icon-shape { display: inline-block; transform-origin: center; }
-.section-icon { width: 22px; height: 22px; border-radius: 4px; }
-.upgrade-sec-icon { background-color: #89f7fe; transform: rotate(45deg); } /* Cyan diamond */
-.generator-sec-icon { background-color: #f789fe; } /* Magenta square */
+.section-icon { width: 20px; height: 20px; border-radius: 4px; } /* Adjusted size */
+.upgrade-sec-icon { background-color: #89f7fe; transform: rotate(45deg); }
+.generator-sec-icon { background-color: #f789fe; }
 
 .item-icon { width: 16px; height: 16px; margin-right: 8px; }
-.click-power-icon { background-color: #89f7fe; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); } /* Diamond */
-.drone-icon { background-color: #f789fe; width:18px; height:12px; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); } /* Hexagon-like */
-.collector-icon { background-color: #f7c889; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);} /* Hexagon */
+.click-power-icon { background-color: #89f7fe; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+.drone-icon { background-color: #f789fe; width:18px; height:12px; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
+.collector-icon { background-color: #f7c889; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);}
 
 
 .upgrade-controls, .generator-controls {
-    display: flex; flex-direction: column; gap: 15px;
+    display: flex; flex-direction: column; gap: 12px; /* Adjusted gap */
+    flex-grow: 1; /* Allow them to take up space if section is flex */
 }
 .upgrade, .generator {
     background-color: rgba(40, 40, 80, 0.7);
-    padding: 15px; border-radius: 8px;
+    padding: 12px; border-radius: 8px; /* Adjusted padding */
     border: 1px solid rgba(90, 90, 160, 0.7);
     box-shadow: 0 3px 7px rgba(0,0,0,0.3);
     transition: background-color 0.2s;
@@ -212,36 +246,35 @@ main { display: flex; flex-direction: column; align-items: center; gap: 15px; }
 .upgrade:hover, .generator:hover { background-color: rgba(50, 50, 90, 0.8); }
 
 .upgrade h3, .generator h3 {
-    color: #e0e0ff; font-size: 1.2em;
-    margin-bottom: 8px; display: flex; align-items: center;
+    color: #e0e0ff; font-size: 1.15em; /* Adjusted font size */
+    margin-bottom: 6px; display: flex; align-items: center;
 }
-.upgrade p, .generator p { margin: 6px 0; font-size: 0.95em; color: #b8b8e8;}
+.upgrade p, .generator p { margin: 5px 0; font-size: 0.9em; color: #b8b8e8;} /* Adjusted font size */
 
-/* --- Generator Fleet Display --- */
 #generator-fleet-display {
-    min-height: 60px;
+    min-height: 50px; /* Adjusted height */
     background: rgba(15, 15, 35, 0.5);
     border-radius: 8px;
-    margin-bottom: 15px;
-    padding: 10px;
+    margin-bottom: 12px; /* Adjusted margin */
+    padding: 8px; /* Adjusted padding */
     display: flex;
-    gap: 4px 6px; /* Gap between icons */
+    gap: 4px 6px;
     flex-wrap: wrap;
     align-items: center;
     border: 1px dashed rgba(80, 80, 150, 0.4);
-    overflow-y: auto; /* if too many icons */
-    max-height: 120px;
+    overflow-y: auto;
+    max-height: 100px; /* Adjusted max height */
 }
 .visual-generator-icon {
     width: 12px; height: 12px;
     border-radius: 2px;
-    opacity: 0; /* Start hidden, fade in */
+    opacity: 0;
     animation: popIn 0.5s ease-out forwards;
-    animation-delay: var(--delay, 0s); /* For staggered appearance */
-    flex-shrink: 0; /* Prevent shrinking if container is small */
+    animation-delay: var(--delay, 0s);
+    flex-shrink: 0;
 }
-.visual-gen1 { background-color: #f789fe; /* Drone color */ clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);}
-.visual-gen2 { background-color: #f7c889; /* Collector color */ clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);}
+.visual-gen1 { background-color: #f789fe; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);}
+.visual-gen2 { background-color: #f7c889; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);}
 
 @keyframes popIn {
     0% { transform: scale(0.3) rotate(-45deg); opacity: 0; }
@@ -249,15 +282,14 @@ main { display: flex; flex-direction: column; align-items: center; gap: 15px; }
     100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-/* --- Buttons & Footer --- */
 button {
-    background: linear-gradient(145deg, #7f00ff, #e100ff); /* Vibrant purple gradient */
+    background: linear-gradient(145deg, #7f00ff, #e100ff);
     color: white;
     border: none;
-    padding: 12px 18px;
+    padding: 10px 15px; /* Adjusted padding */
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.95em; /* Adjusted font size */
     font-family: 'Orbitron', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -279,11 +311,11 @@ button:disabled {
     box-shadow: 0 3px 0px #3e4350;
 }
 
-footer { margin-top: 20px; text-align: center; padding-top: 15px; border-top: 1px solid rgba(100, 100, 200, 0.3); }
-footer button { background: linear-gradient(145deg, #007bff, #00d4ff); box-shadow: 0 3px 0px #0056b3, 0 0 10px rgba(0, 212, 255, 0.3); }
+footer { margin-top: 15px; text-align: center; padding-top: 12px; border-top: 1px solid rgba(100, 100, 200, 0.3); }
+footer button { background: linear-gradient(145deg, #007bff, #00d4ff); box-shadow: 0 3px 0px #0056b3, 0 0 10px rgba(0, 212, 255, 0.3); margin: 5px; }
 footer button:hover:not(:disabled) { background: linear-gradient(145deg, #1a8cff, #1aeaff); box-shadow: 0 3px 0px #0056b3, 0 0 15px rgba(0, 212, 255, 0.5); }
 footer button:active:not(:disabled) { box-shadow: 0 1px 0px #0056b3; }
 #reset-button { background: linear-gradient(145deg, #dc3545, #ff6b6b); box-shadow: 0 3px 0px #b02a37, 0 0 10px rgba(255, 107, 107, 0.3); }
 #reset-button:hover:not(:disabled) { background: linear-gradient(145deg, #e84a5f, #ff7f7f); box-shadow: 0 3px 0px #b02a37, 0 0 15px rgba(255, 107, 107, 0.5); }
 
-#save-status { margin-top: 10px; font-style: italic; color: #aaaac5; min-height: 1.2em; }
+#save-status { margin-top: 8px; font-style: italic; color: #aaaac5; min-height: 1.2em; }
