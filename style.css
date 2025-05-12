@@ -1,162 +1,289 @@
+/* --- Global Styles & Font --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #1a1a2e; /* Dark space blue */
-    color: #e0e0e0; /* Light grey */
+    font-family: 'Orbitron', sans-serif;
+    background-color: #0a0a1f; /* Deep space blue/purple */
+    color: #d0d0ff; /* Light lavender */
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Align to top */
+    align-items: center;
     min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
+    overflow: hidden; /* Important for full-screen animations */
+    position: relative; /* For positioning animated elements */
 }
 
-.container {
-    background-color: #162447; /* Slightly lighter dark blue */
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    max-width: 800px;
-    width: 100%;
-    text-align: center;
+/* --- Background Animation --- */
+#background-animation-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: -1;
 }
-
-h1, h2, h3 {
-    color: #f0c040; /* Gold accent */
-    margin-bottom: 0.5em;
-}
-
-.stats-display {
-    background-color: #1f4068; /* Medium blue */
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.stats-display p {
-    margin: 5px 0;
-    font-size: 1.1em;
-}
-
-.click-area {
-    margin-bottom: 30px;
-    position: relative; /* Needed for feedback positioning */
-}
-
-.click-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: transform 0.1s ease;
-}
-
-.click-button img {
-    border-radius: 50%;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); /* Gold glow */
-}
-
-.click-button:active {
-    transform: scale(0.95);
-}
-
-/* Click feedback animation */
-.click-feedback {
+.bg-star {
     position: absolute;
-    left: 50%;
-    top: 40%; /* Adjust as needed */
-    transform: translateX(-50%);
-    font-size: 1.5em;
-    color: #f0c040; /* Gold */
-    font-weight: bold;
-    pointer-events: none; /* Don't interfere with clicks */
-    animation: fadeUp 0.7s ease-out forwards;
-    text-shadow: 0 0 5px black;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0; /* Start invisible, fade in */
+    animation: fallAndTwinkle 10s linear infinite;
+}
+@keyframes fallAndTwinkle {
+    0% { transform: translateY(-10vh) scale(0.5); opacity: 0; }
+    10% { opacity: 0.7; transform: scale(1); } /* Fade in */
+    90% { opacity: 0.7; transform: scale(1); } /* Twinkle period */
+    95% { transform: scale(0.8); opacity: 0.5;}
+    100% { transform: translateY(110vh) scale(0.5); opacity: 0; }
 }
 
-@keyframes fadeUp {
-    from {
-        opacity: 1;
-        transform: translate(-50%, 0);
-    }
-    to {
-        opacity: 0;
-        transform: translate(-50%, -50px);
-    }
-}
-
-
-.upgrades-section, .generator-controls {
+/* --- Main Container --- */
+.container {
+    background: rgba(20, 20, 50, 0.85); /* Translucent dark blue */
+    backdrop-filter: blur(8px);
+    padding: 25px 30px;
+    border-radius: 25px;
+    border: 2px solid rgba(100, 100, 200, 0.5);
+    box-shadow: 0 0 40px rgba(120, 120, 255, 0.3), inset 0 0 20px rgba(0,0,0,0.4);
+    width: 95%;
+    max-width: 900px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 15px;
+    flex-direction: column;
+    gap: 25px;
+    position: relative; /* For particle container context */
+    z-index: 1;
 }
 
-.upgrade, .generator {
-    background-color: #1f4068;
+header { text-align: center; }
+h1 {
+    color: #82aaff; /* Brighter, cool blue */
+    text-shadow: 0 0 8px #82aaff, 0 0 16px #82aaff, 0 0 2px #fff;
+    margin-bottom: 20px;
+    font-size: 2.8em;
+    letter-spacing: 1px;
+}
+
+/* --- Stats Display --- */
+.stats-display {
+    background: rgba(30, 30, 70, 0.7);
+    padding: 12px 18px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid rgba(80, 80, 150, 0.6);
+    margin-bottom: 25px;
+}
+.stats-display p { font-size: 1.15em; color: #c0c0ff; display: flex; align-items: center; gap: 8px;}
+.stats-display span[id] { color: #f0e060; /* Goldish yellow for numbers */ font-weight: bold; }
+.icon-shape.stardust-icon {
+    width: 16px; height: 16px;
+    background-color: #f0e060;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); /* Star shape */
+}
+
+/* --- Main Interaction: Click Area --- */
+main { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.click-area {
+    position: relative;
+    width: 180px; height: 180px;
+    display: flex; justify-content: center; align-items: center;
+    margin-bottom: 10px;
+}
+#click-target { /* The main clickable shape */
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, #c89aff 0%, #9370db 60%, #6a0dad 100%); /* Purpleish gradient */
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* Organic blob shape */
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, border-radius 0.3s ease;
+    box-shadow: 0 0 20px #9370db, 0 0 35px #9370db, inset 0 0 15px rgba(255,220,255,0.4);
+    animation: pulseBlob 5s infinite ease-in-out;
+}
+@keyframes pulseBlob {
+    0%, 100% { transform: scale(1); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    50% { transform: scale(1.05); border-radius: 50% 50% 40% 60% / 60% 40% 50% 50%; }
+}
+#click-target:hover {
+    transform: scale(1.08) !important; /* Override animation for hover */
+    box-shadow: 0 0 30px #c89aff, 0 0 50px #c89aff, inset 0 0 20px rgba(255,220,255,0.6);
+}
+#click-target:active {
+    transform: scale(0.92) !important;
+    background: radial-gradient(circle, #e6ceff 0%, #bca0f7 60%, #824bc2 100%);
+    animation: none; /* Pause pulse on active */
+}
+
+/* Click Feedback (Sparks & Text) */
+#click-feedback-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+}
+.click-spark { /* Shape for click visual */
+    position: absolute;
+    width: 10px; height: 20px; /* Tall, thin shard */
+    background-color: #f0e060;
+    opacity: 0.9;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* Triangle */
+    transform-origin: bottom center;
+    animation: shootSpark 0.6s ease-out forwards;
+}
+@keyframes shootSpark {
+    0% { transform: scale(0.5) rotate(var(--angle)) translateY(0); opacity: 1; }
+    100% { transform: scale(1.5) rotate(var(--angle)) translateY(-80px); opacity: 0; }
+}
+.click-text-feedback { /* For the +N text */
+    position: absolute;
+    font-size: 1.6em; color: #f0e060; font-weight: bold;
+    animation: fadeUpText 0.7s ease-out forwards;
+    text-shadow: 0 0 5px black; transform: translateX(-50%);
+}
+@keyframes fadeUpText { /* Same as before, just ensure it's defined */
+    from { opacity: 1; transform: translate(-50%, 0); }
+    to { opacity: 0; transform: translate(-50%, -60px); }
+}
+
+/* --- Stardust Particle Flow --- */
+#stardust-particle-flow-container {
+    position: absolute; /* Relative to main.container */
+    bottom: 100px; /* Position it below click area, above upgrades panel usually */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; height: 150px; /* Area from which particles seem to originate */
+    pointer-events: none;
+    z-index: 5;
+}
+.stardust-particle {
+    position: absolute;
+    width: 8px; height: 8px;
+    background-color: #f0e060;
+    border-radius: 2px; /* More crystalline */
+    box-shadow: 0 0 6px #f0e060, 0 0 3px #fff;
+    opacity: 0; /* Start invisible */
+    /* Animation set by JS */
+}
+
+
+/* --- Upgrades & Generators Panel --- */
+.upgrades-panel {
+    display: grid; /* Using grid for better layout options */
+    grid-template-columns: 1fr; /* Default for mobile */
+    gap: 20px;
+    background: rgba(30, 30, 70, 0.4);
+    padding: 20px;
+    border-radius: 15px;
+}
+@media (min-width: 768px) { /* For wider screens */
+    .upgrades-panel { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+}
+
+.upgrades-section, .generators-section {
     padding: 15px;
+    border: 1px solid rgba(80, 80, 150, 0.5);
+    border-radius: 10px;
+    background: rgba(25,25,60,0.5);
+}
+.upgrades-section h2, .generators-section h2 {
+    color: #a2c2ff; /* Light blue title */
+    margin-bottom: 15px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.6em;
+    border-bottom: 1px solid rgba(100,100,200,0.3);
+    padding-bottom: 8px;
+}
+/* General Icon Shapes */
+.icon-shape { display: inline-block; transform-origin: center; }
+.section-icon { width: 22px; height: 22px; border-radius: 4px; }
+.upgrade-sec-icon { background-color: #89f7fe; transform: rotate(45deg); } /* Cyan diamond */
+.generator-sec-icon { background-color: #f789fe; } /* Magenta square */
+
+.item-icon { width: 16px; height: 16px; margin-right: 8px; }
+.click-power-icon { background-color: #89f7fe; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); } /* Diamond */
+.drone-icon { background-color: #f789fe; width:18px; height:12px; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); } /* Hexagon-like */
+.collector-icon { background-color: #f7c889; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);} /* Hexagon */
+
+
+.upgrade-controls, .generator-controls {
+    display: flex; flex-direction: column; gap: 15px;
+}
+.upgrade, .generator {
+    background-color: rgba(40, 40, 80, 0.7);
+    padding: 15px; border-radius: 8px;
+    border: 1px solid rgba(90, 90, 160, 0.7);
+    box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+    transition: background-color 0.2s;
+}
+.upgrade:hover, .generator:hover { background-color: rgba(50, 50, 90, 0.8); }
+
+.upgrade h3, .generator h3 {
+    color: #e0e0ff; font-size: 1.2em;
+    margin-bottom: 8px; display: flex; align-items: center;
+}
+.upgrade p, .generator p { margin: 6px 0; font-size: 0.95em; color: #b8b8e8;}
+
+/* --- Generator Fleet Display --- */
+#generator-fleet-display {
+    min-height: 60px;
+    background: rgba(15, 15, 35, 0.5);
     border-radius: 8px;
-    border: 1px solid #334a6e;
-    min-width: 180px;
-    flex: 1; /* Allow flex items to grow */
-    max-width: 250px; /* Prevent them from getting too wide */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-bottom: 15px;
+    padding: 10px;
+    display: flex;
+    gap: 4px 6px; /* Gap between icons */
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px dashed rgba(80, 80, 150, 0.4);
+    overflow-y: auto; /* if too many icons */
+    max-height: 120px;
+}
+.visual-generator-icon {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    opacity: 0; /* Start hidden, fade in */
+    animation: popIn 0.5s ease-out forwards;
+    animation-delay: var(--delay, 0s); /* For staggered appearance */
+    flex-shrink: 0; /* Prevent shrinking if container is small */
+}
+.visual-gen1 { background-color: #f789fe; /* Drone color */ clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);}
+.visual-gen2 { background-color: #f7c889; /* Collector color */ clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);}
+
+@keyframes popIn {
+    0% { transform: scale(0.3) rotate(-45deg); opacity: 0; }
+    70% { transform: scale(1.1) rotate(10deg); opacity: 0.8; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-.upgrade p, .generator p {
-    margin: 8px 0;
-}
-
+/* --- Buttons & Footer --- */
 button {
-    background-color: #e43f5a; /* Contrasting red/pink */
+    background: linear-gradient(145deg, #7f00ff, #e100ff); /* Vibrant purple gradient */
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 12px 18px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1em;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    margin-top: 10px;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 0px #5d00b3, 0 0 10px rgba(225, 0, 255, 0.3);
 }
-
 button:hover:not(:disabled) {
-    background-color: #b83248;
+    background: linear-gradient(145deg, #8a1aff, #f01aff);
+    box-shadow: 0 3px 0px #5d00b3, 0 0 15px rgba(225, 0, 255, 0.5);
+    transform: translateY(-1px);
 }
-
 button:active:not(:disabled) {
-    transform: scale(0.98);
+    transform: translateY(1px);
+    box-shadow: 0 1px 0px #5d00b3;
 }
-
 button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-    opacity: 0.7;
+    background: #555c6e;
+    cursor: not-allowed; opacity: 0.6;
+    box-shadow: 0 3px 0px #3e4350;
 }
 
-.save-load {
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 1px solid #334a6e;
-}
-.save-load button {
-    background-color: #1abc9c; /* Teal */
-    margin: 5px;
-}
-.save-load button:hover:not(:disabled) {
-    background-color: #16a085;
-}
-#reset-button {
-    background-color: #c0392b; /* Darker Red */
-}
-#reset-button:hover:not(:disabled) {
-    background-color: #a03225;
-}
-#save-status {
-    margin-top: 10px;
-    font-style: italic;
-    color: #aaa;
-    min-height: 1.2em; /* Prevent layout shift */
-}
+footer { margin-top: 20px; text-align: center; padding-top: 15px; border-top: 1px solid rgba(100, 100, 200, 0.3); }
+footer button { background: linear-gradient(145deg, #007bff, #00d4ff); box-shadow: 0 3px 0px #0056b3, 0 0 10px rgba(0, 212, 255, 0.3); }
+footer button:hover:not(:disabled) { background: linear-gradient(145deg, #1a8cff, #1aeaff); box-shadow: 0 3px 0px #0056b3, 0 0 15px rgba(0, 212, 255, 0.5); }
+footer button:active:not(:disabled) { box-shadow: 0 1px 0px #0056b3; }
+#reset-button { background: linear-gradient(145deg, #dc3545, #ff6b6b); box-shadow: 0 3px 0px #b02a37, 0 0 10px rgba(255, 107, 107, 0.3); }
+#reset-button:hover:not(:disabled) { background: linear-gradient(145deg, #e84a5f, #ff7f7f); box-shadow: 0 3px 0px #b02a37, 0 0 15px rgba(255, 107, 107, 0.5); }
+
+#save-status { margin-top: 10px; font-style: italic; color: #aaaac5; min-height: 1.2em; }
