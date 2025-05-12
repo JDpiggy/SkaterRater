@@ -1,45 +1,36 @@
- <link rel="stylesheet" href="style.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Clicker Deluxe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="background-animation-container">
-        <!-- Stars/particles for background will be generated here -->
-    </div>
     <div id="background-animation-container"></div>
 
     <div class="container">
         <header>
-@@ -24,52 +22,63 @@ <h1>Cosmic Clicker Deluxe</h1>
+            <h1>Cosmic Clicker Deluxe</h1>
+            <div class="stats-display">
+                <p>Stardust: <span class="icon-shape stardust-icon"></span><span id="stardust-count">0</span></p>
+                <p>SPS: <span id="sps-count">0</span></p>
+                <p>SPC: <span id="spc-count">1</span></p>
             </div>
         </header>
 
-        <main>
-            <div class="click-area">
-                <div id="click-target" class="click-target-shape">
-                    <!-- This will be styled as our central clickable shape -->
         <div class="game-content-wrapper">
             <main>
                 <div class="click-area">
                     <div id="click-target" class="click-target-shape"></div>
                     <div id="click-feedback-container"></div>
                 </div>
-                <div id="click-feedback-container"></div> <!-- For +N popups and click sparks -->
-            </div>
-            <div id="stardust-particle-flow-container">
-                <!-- Stardust particles will animate towards the counter from here -->
-            </div>
-        </main>
                 <div id="stardust-particle-flow-container"></div>
             </main>
 
-        <aside class="upgrades-panel">
-            <section class="upgrades-section">
-                <h2><span class="icon-shape section-icon upgrade-sec-icon"></span>Click Power</h2>
-                <div class="upgrade-controls">
-                    <div class="upgrade">
-                        <h3><span class="icon-shape item-icon click-power-icon"></span>Quantum Tapper</h3>
-                        <p>Level: <span id="click-upgrade-level">0</span></p>
-                        <p>+<span id="click-upgrade-bonus">1</span> SPC</p>
-                        <button id="buy-click-upgrade" data-cost="10">Buy (Cost: 10)</button>
             <aside class="upgrades-panel">
                 <section class="upgrades-section">
                     <h2><span class="icon-shape section-icon upgrade-sec-icon"></span>Click Power</h2>
@@ -66,27 +57,8 @@
                             <button id="buy-crit-upgrade" data-cost="500">Buy (Cost: 500)</button>
                         </div>
                     </div>
-                </div>
-            </section>
                 </section>
 
-            <section class="generators-section">
-                <h2><span class="icon-shape section-icon generator-sec-icon"></span>Stardust Generators</h2>
-                <div id="generator-fleet-display">
-                    <!-- Visual representation of purchased generators -->
-                </div>
-                <div class="generator-controls">
-                    <div class="generator">
-                        <h3><span class="icon-shape item-icon drone-icon"></span>Nebula Drone</h3>
-                        <p>Generates <span id="gen1-sps">1</span> SPS</p>
-                        <p>Owned: <span id="gen1-level">0</span></p>
-                        <button id="buy-gen1" data-cost="50">Buy (Cost: 50)</button>
-                    </div>
-                     <div class="generator">
-                        <h3><span class="icon-shape item-icon collector-icon"></span>Crystal Harvester</h3>
-                        <p>Generates <span id="gen2-sps">5</span> SPS</p>
-                        <p>Owned: <span id="gen2-level">0</span></p>
-                        <button id="buy-gen2" data-cost="250">Buy (Cost: 250)</button>
                 <section class="generators-section">
                     <h2><span class="icon-shape section-icon generator-sec-icon"></span>Stardust Generators</h2>
                     <div id="generator-fleet-display"></div>
@@ -104,12 +76,18 @@
                             <button id="buy-gen2" data-cost="250">Buy (Cost: 250)</button>
                         </div>
                     </div>
-                </div>
-            </section>
-        </aside>
                 </section>
             </aside>
         </div>
 
          <footer>
              <button id="save-button">Save</button>
+             <button id="load-button">Load</button>
+             <button id="reset-button">Reset</button>
+             <p id="save-status"></p>
+         </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
