@@ -3,89 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Clicker Deluxe</title>
+    <title>Neo Poker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="background-animation-container"></div>
-
-    <div class="container">
-        <header>
-            <h1>Cosmic Clicker Deluxe</h1>
-            <div class="stats-display">
-                <p>Stardust: <span class="icon-shape stardust-icon"></span><span id="stardust-count">0</span></p>
-                <p>SPS: <span id="sps-count">0</span></p>
-                <p>SPC: <span id="spc-count">1</span></p>
-            </div>
-        </header>
-
-        <div class="game-content-wrapper">
-            <main>
-                <div class="click-area">
-                    <div id="click-target" class="click-target-shape"></div>
-                    <div id="click-feedback-container"></div>
-                </div>
-                <div id="stardust-particle-flow-container"></div>
-            </main>
-
-            <aside class="upgrades-panel">
-                <section class="upgrades-section">
-                    <h2><span class="icon-shape section-icon upgrade-sec-icon"></span>Click Power</h2>
-                    <div class="upgrade-controls">
-                        <!-- Quantum Tapper -->
-                        <div class="upgrade">
-                            <h3><span class="icon-shape item-icon click-power-icon"></span>Quantum Tapper</h3>
-                            <p>Level: <span id="click-upgrade-level">0</span></p>
-                            <p>+<span id="click-upgrade-bonus-display">1</span> Base SPC</p> <!-- Clarified display -->
-                            <button id="buy-click-upgrade" data-cost="10">Buy (Cost: 10)</button>
-                        </div>
-                        <!-- Synergy Spark -->
-                        <div class="upgrade">
-                            <h3><span class="icon-shape item-icon synergy-icon"></span>Synergy Spark</h3>
-                            <p>Level: <span id="synergy-upgrade-level">0</span></p>
-                            <p>Adds <span id="synergy-bonus-display">0</span>% of SPS to click</p>
-                            <button id="buy-synergy-upgrade" data-cost="150">Buy (Cost: 150)</button>
-                        </div>
-                        <!-- Critical Surge -->
-                        <div class="upgrade">
-                            <h3><span class="icon-shape item-icon crit-icon"></span>Critical Surge</h3>
-                            <p>Crit Chance: <span id="crit-chance-display">0</span>%</p>
-                            <p>Crit Multiplier: x<span id="crit-multiplier-display">2</span></p>
-                            <button id="buy-crit-upgrade" data-cost="500">Buy (Cost: 500)</button>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="generators-section">
-                    <h2><span class="icon-shape section-icon generator-sec-icon"></span>Stardust Generators</h2>
-                    <div id="generator-fleet-display"></div>
-                    <div class="generator-controls">
-                        <div class="generator">
-                            <h3><span class="icon-shape item-icon drone-icon"></span>Nebula Drone</h3>
-                            <p>Generates <span id="gen1-sps">1</span> SPS</p>
-                            <p>Owned: <span id="gen1-level">0</span></p>
-                            <button id="buy-gen1" data-cost="50">Buy (Cost: 50)</button>
-                        </div>
-                         <div class="generator">
-                            <h3><span class="icon-shape item-icon collector-icon"></span>Crystal Harvester</h3>
-                            <p>Generates <span id="gen2-sps">5</span> SPS</p>
-                            <p>Owned: <span id="gen2-level">0</span></p>
-                            <button id="buy-gen2" data-cost="250">Buy (Cost: 250)</button>
-                        </div>
-                    </div>
-                </section>
-            </aside>
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="screen active">
+        <div class="menu-background">
+            <!-- This div will have the background image via CSS -->
         </div>
+        <div class="menu-content">
+            <h1>NEO POKER</h1>
+            <button id="start-game-button">Enter the Grid</button>
+            <!-- <button id="how-to-play-button">Learn the Rules</button> -->
+        </div>
+    </div>
 
-         <footer>
-             <button id="save-button">Save</button>
-             <button id="load-button">Load</button>
-             <button id="reset-button">Reset</button>
-             <p id="save-status"></p>
-         </footer>
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-table">
+            <!-- Community Cards -->
+            <div id="community-cards-area" class="community-cards-area">
+                <div class="card-placeholder"></div>
+                <div class="card-placeholder"></div>
+                <div class="card-placeholder"></div>
+                <div class="card-placeholder"></div>
+                <div class="card-placeholder"></div>
+            </div>
+
+            <!-- Pot Display -->
+            <div id="pot-area" class="pot-area">
+                Pot: <span id="pot-amount">0</span>
+            </div>
+
+            <!-- Player Areas (e.g., 4 players: 1 human, 3 bots) -->
+            <div class="player-area player-human" id="player-0-area">
+                <div class="player-info">
+                    <span class="player-name">YOU</span>
+                    <span class="player-stack" id="player-0-stack">1000</span>
+                    <span class="player-bet" id="player-0-bet">Bet: 0</span>
+                    <span class="player-status" id="player-0-status"></span>
+                </div>
+                <div class="player-cards" id="player-0-cards">
+                    <!-- Human player's cards here -->
+                </div>
+            </div>
+
+            <div class="player-area player-bot" id="player-1-area">
+                <div class="player-info">
+                    <span class="player-name" id="player-1-name">BOT ACE</span>
+                    <span class="player-stack" id="player-1-stack">1000</span>
+                    <span class="player-bet" id="player-1-bet">Bet: 0</span>
+                    <span class="player-status" id="player-1-status"></span>
+                </div>
+                <div class="player-cards" id="player-1-cards">
+                    <!-- Bot 1's cards (facedown usually) -->
+                </div>
+            </div>
+
+            <div class="player-area player-bot" id="player-2-area">
+                <div class="player-info">
+                    <span class="player-name" id="player-2-name">CYBER KATE</span>
+                    <span class="player-stack" id="player-2-stack">1000</span>
+                    <span class="player-bet" id="player-2-bet">Bet: 0</span>
+                    <span class="player-status" id="player-2-status"></span>
+                </div>
+                <div class="player-cards" id="player-2-cards">
+                </div>
+            </div>
+
+            <div class="player-area player-bot" id="player-3-area">
+                <div class="player-info">
+                    <span class="player-name" id="player-3-name">GLITCH</span>
+                    <span class="player-stack" id="player-3-stack">1000</span>
+                    <span class="player-bet" id="player-3-bet">Bet: 0</span>
+                    <span class="player-status" id="player-3-status"></span>
+                </div>
+                <div class="player-cards" id="player-3-cards">
+                </div>
+            </div>
+
+            <!-- Action Buttons for Human Player -->
+            <div id="actions-area" class="actions-area">
+                <button class="action-button" data-action="fold">Fold</button>
+                <button class="action-button" data-action="check">Check</button>
+                <button class="action-button" data-action="call">Call</button>
+                <input type="number" id="bet-amount-input" min="1" value="10">
+                <button class="action-button" data-action="bet">Bet</button>
+                <button class="action-button" data-action="raise">Raise</button>
+                <!-- All-in might be implicit or a separate button -->
+            </div>
+
+            <!-- Message Log -->
+            <div id="message-log" class="message-log">
+                Welcome to Neo Poker!
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
