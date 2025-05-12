@@ -1,130 +1,228 @@
-/* ... (Keep all your existing styles: Global, Menu, Game Table, Player Areas, etc.) ... */
-
-/* --- Action Buttons (and general button styling if needed) --- */
-/* General Button Style (can be used for menu and other buttons if consistent look is desired) */
-button, .action-button { /* Apply to generic button tag and specifically .action-button */
-    font-family: 'Orbitron', sans-serif;
-    padding: 10px 20px; /* Default padding */
-    font-size: 1em; /* Default font size */
-    color: white;
-    border: none;
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.2s ease;
-    box-shadow: 0 0 8px rgba(0,0,0,0.3); /* Subtle base shadow */
+/* --- Global Styles & Fonts --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: #1a0f29; /* Consistent Deep Purple Background */
+    color: #e0d0ff; /* Default Light Lavender Text */
+    display: flex;
+    flex-direction: column; /* Stack menu/game content */
+    justify-content: flex-start; /* Align to top */
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-/* Menu Button Specifics (if different from action buttons) */
-.menu-content button {
+.screen {
+    width: 100%;
+    max-width: 800px; /* Max width for the content area */
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center; /* Center text within screens */
+}
+.screen.active { display: flex; }
+
+/* --- Menu Screen --- */
+#menu-screen {
+    /* ... (Keep menu background image styles if you use them) ... */
+}
+.menu-content {
+    text-align: center;
+    padding: 30px;
+    background: rgba(26, 15, 41, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+    margin-top: 50px; /* Space from top */
+}
+.menu-content h1 { /* "NEO POKER" title */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4.5em; /* Adjusted for potentially smaller screen area */
+    color: #ff00ff; /* Neon Magenta */
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff40ff;
+    margin-bottom: 30px;
+}
+.menu-content .player-count-selector {
+    margin-bottom: 25px;
+    color: #c0b0e0;
+}
+.menu-content .player-count-selector label {
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+.menu-content .player-count-selector input[type="number"] {
+    padding: 8px;
+    font-size: 1em;
+    width: 60px;
+    background-color: rgba(255,255,255,0.1);
+    border: 1px solid #00e0e0; /* Cyan border */
+    color: #e0d0ff;
+    border-radius: 5px;
+    text-align: center;
+}
+.menu-content button#start-game-button { /* "ENTER THE GRID" button */
+    font-family: 'Orbitron', sans-serif;
     font-size: 1.5em;
     padding: 15px 30px;
     background: linear-gradient(145deg, #00a1ff, #0056ff); /* Neon Blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
     box-shadow: 0 0 10px #00a1ff, 0 0 15px #0056ff, inset 0 0 5px rgba(255,255,255,0.3);
+    transition: all 0.2s ease;
 }
-.menu-content button:hover {
+.menu-content button#start-game-button:hover {
     background: linear-gradient(145deg, #33baff, #337eff);
     box-shadow: 0 0 15px #00a1ff, 0 0 25px #0056ff, inset 0 0 8px rgba(255,255,255,0.4);
     transform: translateY(-2px);
 }
 
+/* --- Game Screen Elements (as seen in screenshot) --- */
+#game-screen {
+    padding-top: 20px;
+    gap: 15px; /* Space between elements like pot, player info, log */
+}
 
-/* Action Buttons on the Game Table */
-.actions-area {
+/* Pot Display */
+#pot-area, .pot-display-class { /* Assuming a div for pot info */
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #ffd700; /* Gold */
+    padding: 10px 15px;
+    background-color: rgba(10, 5, 20, 0.6); /* Darker background */
+    border-radius: 8px;
+    text-shadow: 0 0 5px #ffd700;
+    border: 1px solid #b8860b; /* Dark gold border */
+    margin-bottom: 10px;
+}
+
+/* Player Info Display (Text list style) */
+.player-info-list-item { /* Assuming each player's info is a <p> or <div> */
+    font-size: 1.1em;
+    line-height: 1.5;
+    color: #c0b0e0; /* Softer lavender for general info */
+    text-align: left; /* Align player info to the left */
+    width: 100%;
+    max-width: 400px; /* Limit width of this text block */
+    margin: 3px 0;
+}
+.player-info-list-item .player-name-highlight { /* For player names in the list */
+    color: #ff80ff; /* Pinkish */
+    font-weight: 600;
+}
+.player-info-list-item .player-cards-display { /* For 4♦ A♣ */
+    color: #00e0e0; /* Cyan for cards */
+    font-family: 'Orbitron', sans-serif; /* Make cards stand out */
+    margin-left: 5px;
+}
+.player-info-list-item .dealer-chip-text {
+    color: #f0e060; /* Gold for Dealer text */
+    font-style: italic;
+    margin-left: 5px;
+}
+
+
+/* Community Cards Display (If shown as text) */
+#community-cards-area, .community-cards-text-display {
+    font-size: 1.3em;
+    color: #00e0e0; /* Cyan */
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 15px;
+    padding: 8px;
+    background-color: rgba(10, 5, 20, 0.4);
+    border-radius: 5px;
+}
+
+/* Action Buttons Area */
+#actions-area {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px; /* Slightly smaller gap */
     justify-content: center;
-    padding: 12px; /* Slightly reduced padding */
-    background-color: rgba(10, 5, 20, 0.5); /* Darker, more integrated background */
+    padding: 10px;
+    background-color: rgba(10, 5, 20, 0.7); /* Dark, thematic background */
     border-radius: 10px;
-    border: 1px solid rgba(255, 0, 255, 0.3); /* Subtle magenta border */
-    position: absolute;
-    bottom: 75px; /* Adjust as needed */
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    max-width: 90%;
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.2); /* Softer glow */
+    border: 1px solid rgba(255, 0, 255, 0.4); /* Magenta border */
+    margin-top: 15px; /* Space from elements above */
+    margin-bottom: 15px;
 }
 
-.action-button { /* Styles specifically for buttons in the actions-area */
-    background: linear-gradient(145deg, #ff40ff, #c000c0); /* Magenta/Purple gradient */
-    /* box-shadow: 0 3px 0px #a000a0, 0 0 10px rgba(255, 64, 255, 0.4); */
-    box-shadow: 0 0 8px #ff40ff, 0 0 12px #ff40ff, inset 0 0 4px rgba(255,200,255,0.2);
-
-
-    padding: 10px 18px; /* Slightly more padding for action buttons */
+.action-button { /* Fold, Check, Call, Bet, Raise */
+    font-family: 'Orbitron', sans-serif;
+    padding: 10px 15px;
     font-size: 1em;
+    background: linear-gradient(145deg, #ff40ff, #c000c0); /* Magenta/Purple gradient */
+    color: white;
+    border: none;
+    border-radius: 6px; /* Slightly less rounded */
+    cursor: pointer;
+    box-shadow: 0 0 8px #ff40ff, 0 0 12px #ff40ff, inset 0 0 3px rgba(255,200,255,0.2);
+    transition: all 0.2s ease;
 }
-
 .action-button:hover:not(:disabled) {
-    background: linear-gradient(145deg, #ff70ff, #e000e0); /* Brighter on hover */
-    box-shadow: 0 0 12px #ff70ff, 0 0 18px #ff70ff, inset 0 0 6px rgba(255,220,255,0.3);
-    transform: translateY(-1px) scale(1.03); /* Slight lift and scale */
+    background: linear-gradient(145deg, #ff70ff, #e000e0);
+    box-shadow: 0 0 12px #ff70ff, 0 0 18px #ff70ff, inset 0 0 5px rgba(255,220,255,0.3);
+    transform: translateY(-1px);
 }
-
 .action-button:active:not(:disabled) {
-    transform: translateY(0px) scale(1); /* Press down effect */
+    transform: translateY(0px);
     box-shadow: 0 0 5px #ff40ff, inset 0 0 5px rgba(0,0,0,0.2);
 }
-
 .action-button:disabled {
-    background: linear-gradient(145deg, #503050, #402040); /* Darker, desaturated purple */
-    color: #888;
-    opacity: 0.7;
+    background: linear-gradient(145deg, #503050, #402040);
+    color: #777; /* Darker grey for disabled text */
+    opacity: 0.6;
     cursor: not-allowed;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
     transform: none;
 }
 
-/* Bet Amount Input */
+/* Bet Amount Input (if still used in this simpler layout) */
 #bet-amount-input {
     padding: 10px;
     font-size: 1em;
     font-family: 'Rajdhani', sans-serif;
-    width: 90px; /* Slightly wider */
-    background-color: rgba(20, 10, 35, 0.7); /* Dark input background */
-    border: 1px solid #00e0e0; /* Cyan border */
+    width: 70px; /* Smaller if needed */
+    background-color: rgba(20, 10, 35, 0.8);
+    border: 1px solid #00e0e0;
     color: #e0d0ff;
     border-radius: 5px;
     text-align: center;
-    box-shadow: inset 0 0 8px rgba(0, 224, 224, 0.3);
+    box-shadow: inset 0 0 8px rgba(0, 224, 224, 0.2);
 }
 #bet-amount-input:focus {
     outline: none;
-    border-color: #ff00ff; /* Magenta border on focus */
-    box-shadow: inset 0 0 8px rgba(255, 0, 255, 0.4), 0 0 10px rgba(255,0,255,0.3);
+    border-color: #ff00ff;
+    box-shadow: inset 0 0 8px rgba(255, 0, 255, 0.3), 0 0 10px rgba(255,0,255,0.2);
 }
 
 
-/* --- Message Log (No changes from previous, ensure it's styled nicely) --- */
-.message-log {
-    /* ... existing styles ... */
-    /* Ensure it fits the theme: */
-    background-color: rgba(10, 5, 20, 0.6);
-    border: 1px solid rgba(0, 224, 224, 0.3); /* Subtle cyan border */
-    color: #c0b0e0; /* Slightly softer text color */
+/* Message Log (The grey box in screenshot) */
+#message-log {
+    width: 100%;
+    max-width: 500px; /* Control width of the log */
+    min-height: 150px; /* Ensure it has some visible height */
+    max-height: 300px; /* Limit scrollable height */
+    overflow-y: auto;
+    background-color: rgba(30, 20, 50, 0.85); /* Thematic Dark Purple/Grey */
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1em; /* Readable log text */
+    line-height: 1.6;
+    text-align: left; /* Log messages typically left-aligned */
+    border: 1px solid rgba(0, 224, 224, 0.4); /* Cyan border */
+    box-shadow: 0 0 15px rgba(0, 224, 224, 0.2); /* Cyan glow */
 }
-
-/* --- Credits Restart Button --- */
-#credits-restart-button {
-    /* Ensure this button also gets good styling if it was missed */
-    font-family: 'Orbitron', sans-serif;
-    padding: 12px 25px;
-    font-size: 1.2em;
-    background: linear-gradient(145deg, #00a1ff, #0056ff); /* Neon Blue */
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 0 10px #00a1ff, 0 0 15px #0056ff, inset 0 0 5px rgba(255,255,255,0.3);
-    transition: all 0.2s ease;
-    z-index: 3; /* Make sure it's on top in the credits scene */
+#message-log p {
+    margin-bottom: 6px;
+    color: #d0c0f0; /* Slightly different lavender for log text */
 }
-#credits-restart-button:hover {
-    background: linear-gradient(145deg, #33baff, #337eff);
-    box-shadow: 0 0 15px #00a1ff, 0 0 25px #0056ff, inset 0 0 8px rgba(255,255,255,0.4);
-    transform: translateY(-2px);
+#message-log p:first-child { /* "Welcome to Neo Poker!" */
+    color: #ff80ff; /* Pinkish highlight for welcome or important messages */
+    font-weight: 600;
 }
+/* You might want specific classes for different types of log messages for more styling */
+.log-turn-indicator { color: #f0e060; font-style: italic; } /* Gold for "ONYX's turn..." */
+.log-action { color: #b0e0e6; } /* Light blue/cyan for player actions "ONYX calls 20." */
+.log-phase { color: #ffad73; font-weight: bold; } /* Orange-ish for phase changes */
