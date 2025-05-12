@@ -1,228 +1,231 @@
-/* --- Global Styles & Fonts --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* --- Global Styles & Fonts (Mostly Same) --- */
 body {
-    font-family: 'Rajdhani', sans-serif;
-    background-color: #1a0f29; /* Consistent Deep Purple Background */
-    color: #e0d0ff; /* Default Light Lavender Text */
-    display: flex;
-    flex-direction: column; /* Stack menu/game content */
-    justify-content: flex-start; /* Align to top */
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
+    /* ... */
+    display: flex; /* Keep flex for centering menu */
+    /* justify-content: center; align-items: center; */ /* Game screen might need more nuanced alignment */
 }
-
 .screen {
-    width: 100%;
-    max-width: 800px; /* Max width for the content area */
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    text-align: center; /* Center text within screens */
+    /* ... */
+    /* max-width: none; /* Allow game screen to be wider */
 }
-.screen.active { display: flex; }
 
 /* --- Menu Screen --- */
-#menu-screen {
-    /* ... (Keep menu background image styles if you use them) ... */
-}
 .menu-content {
-    text-align: center;
-    padding: 30px;
-    background: rgba(26, 15, 41, 0.7);
-    border-radius: 15px;
-    box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
-    margin-top: 50px; /* Space from top */
+    /* ... */
+    margin-top: 2vh; /* More dynamic margin */
 }
-.menu-content h1 { /* "NEO POKER" title */
-    font-family: 'Orbitron', sans-serif;
-    font-size: 4.5em; /* Adjusted for potentially smaller screen area */
-    color: #ff00ff; /* Neon Magenta */
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff40ff;
-    margin-bottom: 30px;
-}
-.menu-content .player-count-selector {
-    margin-bottom: 25px;
+.menu-content h1 { font-size: clamp(3em, 10vw, 5.5em); /* Responsive title */ }
+.menu-options {
+    margin-top: 30px;
     color: #c0b0e0;
 }
-.menu-content .player-count-selector label {
-    margin-right: 10px;
-    font-size: 1.1em;
+.menu-options label {
+    font-size: 1.2em; display: block; margin-bottom: 5px;
 }
-.menu-content .player-count-selector input[type="number"] {
-    padding: 8px;
-    font-size: 1em;
-    width: 60px;
-    background-color: rgba(255,255,255,0.1);
-    border: 1px solid #00e0e0; /* Cyan border */
-    color: #e0d0ff;
-    border-radius: 5px;
-    text-align: center;
-}
-.menu-content button#start-game-button { /* "ENTER THE GRID" button */
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5em;
-    padding: 15px 30px;
-    background: linear-gradient(145deg, #00a1ff, #0056ff); /* Neon Blue */
-    color: white;
-    border: none;
-    border-radius: 8px;
+#opponent-count-slider {
+    width: 200px;
+    accent-color: #00e0e0; /* Cyan for slider track */
     cursor: pointer;
-    text-transform: uppercase;
-    box-shadow: 0 0 10px #00a1ff, 0 0 15px #0056ff, inset 0 0 5px rgba(255,255,255,0.3);
-    transition: all 0.2s ease;
+    margin-bottom: 20px;
 }
-.menu-content button#start-game-button:hover {
-    background: linear-gradient(145deg, #33baff, #337eff);
-    box-shadow: 0 0 15px #00a1ff, 0 0 25px #0056ff, inset 0 0 8px rgba(255,255,255,0.4);
-    transform: translateY(-2px);
+/* Customizing slider thumb and track (browser-specific) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #ff00ff; /* Magenta thumb */
+  border-radius: 50%;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 5px #ff00ff;
 }
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #ff00ff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 5px #ff00ff;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  background: #007788; /* Darker cyan for track */
+  border-radius: 4px;
+  border: 1px solid #00e0e0;
+}
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  background: #007788;
+  border-radius: 4px;
+  border: 1px solid #00e0e0;
+}
+.menu-options p { font-size: 1.1em; margin-top: 10px; color: #f0e060; }
 
-/* --- Game Screen Elements (as seen in screenshot) --- */
+
+/* --- Game Screen & Table --- */
 #game-screen {
-    padding-top: 20px;
-    gap: 15px; /* Space between elements like pot, player info, log */
+    flex-direction: column; /* Stack table, info, actions, log */
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    padding: 10px;
+    overflow: hidden; /* Prevent main body scroll */
 }
+.poker-table-container {
+    width: 90%;
+    max-width: 800px; /* Adjust if needed */
+    /* aspect-ratio: 3 / 2; Slightly wider oval */
+    height: 45vh; /* Relative height for table */
+    min-height: 300px;
+    margin-bottom: 10px; /* Space above player info/log */
+    position: relative;
+}
+.poker-table {
+    /* ... (Existing styles for felt, border, shadow) ... */
+    border-radius: 120px / 70px; /* Adjust oval shape */
+}
+.table-center {
+    gap: 10px; /* Reduced gap */
+}
+.community-cards-area .card { width: 50px; height: 70px; font-size: 1.3em; }
+.pot-area { font-size: 1.4em; padding: 6px 12px; }
 
-/* Pot Display */
-#pot-area, .pot-display-class { /* Assuming a div for pot info */
-    font-size: 1.5em;
-    font-weight: 600;
-    color: #ffd700; /* Gold */
-    padding: 10px 15px;
-    background-color: rgba(10, 5, 20, 0.6); /* Darker background */
-    border-radius: 8px;
-    text-shadow: 0 0 5px #ffd700;
-    border: 1px solid #b8860b; /* Dark gold border */
+/* Player Seats & Avatars */
+#player-seats-container { /* ... (same as before) ... */ }
+.player-seat {
+    width: 100px; /* Smaller seat footprint */
+    /* JS will handle positioning based on angle/radius */
+    /* transform: translate(-50%, -50%) is important if JS sets top/left to center points */
+}
+.player-avatar {
+    width: 50px; height: 50px;
+    font-size: 1.5em; /* For initial letter */
+    border-width: 2px;
+    /* ... other avatar styles ... */
+}
+/* No .player-details, .player-hole-cards, .player-current-bet inside .player-seat anymore for this hybrid */
+
+
+/* Game Info Column (for text list of players) */
+.game-info-column {
+    width: 90%;
+    max-width: 500px; /* Width of the text info block */
     margin-bottom: 10px;
-}
-
-/* Player Info Display (Text list style) */
-.player-info-list-item { /* Assuming each player's info is a <p> or <div> */
-    font-size: 1.1em;
-    line-height: 1.5;
-    color: #c0b0e0; /* Softer lavender for general info */
-    text-align: left; /* Align player info to the left */
-    width: 100%;
-    max-width: 400px; /* Limit width of this text block */
-    margin: 3px 0;
-}
-.player-info-list-item .player-name-highlight { /* For player names in the list */
-    color: #ff80ff; /* Pinkish */
-    font-weight: 600;
-}
-.player-info-list-item .player-cards-display { /* For 4♦ A♣ */
-    color: #00e0e0; /* Cyan for cards */
-    font-family: 'Orbitron', sans-serif; /* Make cards stand out */
-    margin-left: 5px;
-}
-.player-info-list-item .dealer-chip-text {
-    color: #f0e060; /* Gold for Dealer text */
-    font-style: italic;
-    margin-left: 5px;
-}
-
-
-/* Community Cards Display (If shown as text) */
-#community-cards-area, .community-cards-text-display {
-    font-size: 1.3em;
-    color: #00e0e0; /* Cyan */
-    font-family: 'Orbitron', sans-serif;
-    margin-bottom: 15px;
-    padding: 8px;
-    background-color: rgba(10, 5, 20, 0.4);
-    border-radius: 5px;
-}
-
-/* Action Buttons Area */
-#actions-area {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px; /* Slightly smaller gap */
-    justify-content: center;
     padding: 10px;
-    background-color: rgba(10, 5, 20, 0.7); /* Dark, thematic background */
-    border-radius: 10px;
-    border: 1px solid rgba(255, 0, 255, 0.4); /* Magenta border */
-    margin-top: 15px; /* Space from elements above */
-    margin-bottom: 15px;
-}
-
-.action-button { /* Fold, Check, Call, Bet, Raise */
-    font-family: 'Orbitron', sans-serif;
-    padding: 10px 15px;
-    font-size: 1em;
-    background: linear-gradient(145deg, #ff40ff, #c000c0); /* Magenta/Purple gradient */
-    color: white;
-    border: none;
-    border-radius: 6px; /* Slightly less rounded */
-    cursor: pointer;
-    box-shadow: 0 0 8px #ff40ff, 0 0 12px #ff40ff, inset 0 0 3px rgba(255,200,255,0.2);
-    transition: all 0.2s ease;
-}
-.action-button:hover:not(:disabled) {
-    background: linear-gradient(145deg, #ff70ff, #e000e0);
-    box-shadow: 0 0 12px #ff70ff, 0 0 18px #ff70ff, inset 0 0 5px rgba(255,220,255,0.3);
-    transform: translateY(-1px);
-}
-.action-button:active:not(:disabled) {
-    transform: translateY(0px);
-    box-shadow: 0 0 5px #ff40ff, inset 0 0 5px rgba(0,0,0,0.2);
-}
-.action-button:disabled {
-    background: linear-gradient(145deg, #503050, #402040);
-    color: #777; /* Darker grey for disabled text */
-    opacity: 0.6;
-    cursor: not-allowed;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
-    transform: none;
-}
-
-/* Bet Amount Input (if still used in this simpler layout) */
-#bet-amount-input {
-    padding: 10px;
-    font-size: 1em;
-    font-family: 'Rajdhani', sans-serif;
-    width: 70px; /* Smaller if needed */
-    background-color: rgba(20, 10, 35, 0.8);
-    border: 1px solid #00e0e0;
-    color: #e0d0ff;
-    border-radius: 5px;
-    text-align: center;
-    box-shadow: inset 0 0 8px rgba(0, 224, 224, 0.2);
-}
-#bet-amount-input:focus {
-    outline: none;
-    border-color: #ff00ff;
-    box-shadow: inset 0 0 8px rgba(255, 0, 255, 0.3), 0 0 10px rgba(255,0,255,0.2);
-}
-
-
-/* Message Log (The grey box in screenshot) */
-#message-log {
-    width: 100%;
-    max-width: 500px; /* Control width of the log */
-    min-height: 150px; /* Ensure it has some visible height */
-    max-height: 300px; /* Limit scrollable height */
-    overflow-y: auto;
-    background-color: rgba(30, 20, 50, 0.85); /* Thematic Dark Purple/Grey */
-    padding: 15px;
+    background: rgba(20,10,35, 0.6);
     border-radius: 8px;
-    font-size: 1em; /* Readable log text */
-    line-height: 1.6;
-    text-align: left; /* Log messages typically left-aligned */
-    border: 1px solid rgba(0, 224, 224, 0.4); /* Cyan border */
-    box-shadow: 0 0 15px rgba(0, 224, 224, 0.2); /* Cyan glow */
+    border: 1px solid rgba(255,0,255,0.2);
+    max-height: 15vh; /* Limit height */
+    overflow-y: auto; /* Scroll if many players listed */
 }
-#message-log p {
-    margin-bottom: 6px;
-    color: #d0c0f0; /* Slightly different lavender for log text */
+#player-info-display-area p { /* Each player's line */
+    font-size: 0.95em;
+    line-height: 1.4;
+    color: #c0b0e0;
+    margin-bottom: 2px;
+    white-space: nowrap; /* Prevent wrapping if possible */
 }
-#message-log p:first-child { /* "Welcome to Neo Poker!" */
-    color: #ff80ff; /* Pinkish highlight for welcome or important messages */
-    font-weight: 600;
+#player-info-display-area .player-name-highlight { color: #ff80ff; font-weight: 600; }
+#player-info-display-area .player-cards-display { color: #00e0e0; font-family: 'Orbitron'; margin-left: 4px; }
+#player-info-display-area .dealer-chip-text { color: #f0e060; font-style: italic; margin-left: 4px; }
+#player-info-display-area .folded-text { color: #888; font-style: italic; }
+
+
+/* Action Buttons Area - Positioned at the bottom */
+#actions-area {
+    position: relative; /* Static positioning within the flex flow now */
+    /* bottom: auto; left: auto; transform: none; */
+    width: 100%;
+    max-width: 600px;
+    padding: 12px;
+    margin-bottom: 10px;
+    /* ... (Existing thematic styles for background, border) ... */
 }
-/* You might want specific classes for different types of log messages for more styling */
-.log-turn-indicator { color: #f0e060; font-style: italic; } /* Gold for "ONYX's turn..." */
-.log-action { color: #b0e0e6; } /* Light blue/cyan for player actions "ONYX calls 20." */
-.log-phase { color: #ffad73; font-weight: bold; } /* Orange-ish for phase changes */
+.bet-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1; /* Allow it to take space */
+    min-width: 200px; /* Ensure it doesn't get too squished */
+}
+#bet-slider-input { /* Themed slider */
+    flex-grow: 1;
+    height: 10px; /* Overall height of the custom styled part */
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent; /* Hide default track */
+    cursor: pointer;
+    margin: 0 5px; /* Add some margin */
+}
+/* Track */
+#bet-slider-input::-webkit-slider-runnable-track {
+  height: 8px;
+  background: #007788; /* Darker cyan */
+  border: 1px solid #00e0e0; /* Cyan border */
+  border-radius: 4px;
+}
+#bet-slider-input::-moz-range-track { /* Firefox */
+  height: 8px;
+  background: #007788;
+  border: 1px solid #00e0e0;
+  border-radius: 4px;
+}
+/* Thumb */
+#bet-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default */
+  appearance: none;
+  margin-top: -6px; /* Align thumb with track ( (track_height + track_border*2 - thumb_height)/2 ) */
+  width: 20px;
+  height: 20px;
+  background: #ff00ff; /* Magenta */
+  border-radius: 50%;
+  border: 2px solid #fff; /* White outline */
+  box-shadow: 0 0 8px #ff00ff;
+}
+#bet-slider-input::-moz-range-thumb { /* Firefox */
+  width: 16px; /* Adjust if border makes it too big */
+  height: 16px;
+  background: #ff00ff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 8px #ff00ff;
+}
+#bet-amount-input { width: 75px; padding: 8px; } /* Input next to slider */
+.action-button { padding: 10px 15px; font-size: 0.95em; } /* Adjust button size */
+.all-in-button { background: linear-gradient(145deg, #ff6060, #cc0000); /* Red for All In */ }
+.all-in-button:hover:not(:disabled) { background: linear-gradient(145deg, #ff8080, #ee0000); }
+
+
+/* Message Log - Positioned at the very bottom */
+#message-log {
+    position: relative; /* Static positioning */
+    /* bottom: auto; right: auto; */
+    width: 100%;
+    max-width: 700px; /* Wider log */
+    height: 20vh; /* Relative height */
+    min-height: 100px;
+    /* ... (Existing thematic styles) ... */
+}
+
+/* Ensure cards on table are visible if avatars are used */
+.player-seat .player-hole-cards {
+    position: absolute; /* Position relative to the seat */
+    bottom: -30px; /* Example: below the avatar */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 2px;
+    z-index: 5; /* Above avatar if overlapping slightly */
+}
+.player-seat .player-hole-cards .card {
+    width: 35px; height: 50px; /* Smaller cards by avatar */
+    font-size: 0.9em;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
