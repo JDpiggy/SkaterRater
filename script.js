@@ -12,7 +12,7 @@ let gameState = {
     lastSaveTime: Date.now()
 };
 
-// DOM Elements
+// DOM Elements Cache (ensure all are correctly fetched)
 const stardustCountEl = document.getElementById('stardust-count');
 const spsCountEl = document.getElementById('sps-count');
 const spcCountEl = document.getElementById('spc-count');
@@ -22,23 +22,22 @@ const stardustParticleFlowContainer = document.getElementById('stardust-particle
 const generatorFleetDisplay = document.getElementById('generator-fleet-display');
 const backgroundAnimationContainer = document.getElementById('background-animation-container');
 
-// Upgrade & Generator Button Elements (cache as before)
-// ... (same caching logic for buy buttons, level spans, etc.)
 const clickUpgradeLevelEl = document.getElementById('click-upgrade-level');
-const clickUpgradeBonusEl = document.getElementById('click-upgrade-bonus');
+const clickUpgradeBonusEl = document.getElementById('click-upgrade-bonus'); // This span shows the bonus, text should be "+N SPC"
 const buyClickUpgradeBtn = document.getElementById('buy-click-upgrade');
+
 const generatorElements = {};
 gameState.generators.forEach(gen => {
     generatorElements[gen.id] = {
         levelEl: document.getElementById(`${gen.id}-level`),
-        spsEl: document.getElementById(`${gen.id}-sps`),
+        spsEl: document.getElementById(`${gen.id}-sps`), // This span shows the SPS per generator unit
         buyBtn: document.getElementById(`buy-${gen.id}`)
     };
-    if(generatorElements[gen.id].spsEl) generatorElements[gen.id].spsEl.textContent = formatNumber(gen.sps);
+    if (generatorElements[gen.id].spsEl) {
+       generatorElements[gen.id].spsEl.textContent = formatNumber(gen.sps);
+    }
 });
 
-
-// Save/Load/Reset Buttons
 const saveButton = document.getElementById('save-button');
 const loadButton = document.getElementById('load-button');
 const resetButton = document.getElementById('reset-button');
@@ -47,22 +46,29 @@ const saveStatusEl = document.getElementById('save-status');
 
 // --- Animation & Visuals Configuration ---
 const MAX_BG_STARS = 50;
-const STARDUST_PARTICLE_ANIMATION_DURATION = 1800; // ms
-const MAX_VISUAL_GENERATORS_PER_TYPE_DISPLAYED = 30; // Max small icons to show for each generator type
-let stardustBufferForAnimation = 0; // Accumulates SPS gain for particle emission
-const PARTICLE_EMISSION_THRESHOLD = 0.5; // Emit particle(s) when buffer reaches this (can be SPS dependent)
-let particleEmissionRateLimiter = 0; // To control emission frequency
+const STARDUST_PARTICLE_ANIMATION_DURATION = 1700; // ms, slightly faster
+const MAX_VISUAL_GENERATORS_PER_TYPE_DISPLAYED = 30;
+let stardustBufferForAnimation = 0;
+const PARTICLE_EMISSION_THRESHOLD = 0.5;
+let particleEmissionRateLimiter = 0;
 
-// --- Core Game Logic (largely same, but trigger visual updates) ---
+// --- Core Game Logic ---
 
-function manualClick(event) { // Pass event for positioning
+function manualClick(event) {
     const clickValue = gameState.stardustPerClick;
-    // gameState.stardust += clickValue; // Delaying actual increment for particle animation
-    createStardustParticlesOnClick(clickValue, event); // Animate particles from click
+    if (clickValue <= 0 && gameState.stardustPerClick <= 0) return; // Check actual SPC in case clickValue is stale
+
+    // --- Stardust Gain Logic ---
+    gameState.stardust += gameState.stardustPerClick; // IMMEDIATE Stardust addition
+
+    // --- Visual Feedback ---
+    createStardustParticlesOnClickVisualsOnly(gameState.stardustPerClick, event); // Visuals only
     showClickSparks(event);
-    showClickTextFeedback(`+${formatNumber(clickValue)}`, event); // Pass event
-    // updateDisplay(); // updateDisplay is called in gameLoop
+    showClickTextFeedback(`+${formatNumber(gameState.stardustPerClick)}`, event);
+
+    // updateDisplay(); // Game loop handles periodic updates, this can make it snappier but might be redundant
 }
+
 
 function buyClickUpgrade() {
     const upgrade = gameState.clickUpgrade;
@@ -71,8 +77,7 @@ function buyClickUpgrade() {
         upgrade.level++;
         gameState.stardustPerClick = 1 + upgrade.level * upgrade.bonusPerLevel;
         upgrade.cost = Math.ceil(upgrade.baseCost * Math.pow(upgrade.costMultiplier, upgrade.level));
-        // Optionally, add visual change to clickTarget based on level
-        // updateDisplay();
+        // updateDisplay(); // Handled by game loop
     }
 }
 
@@ -82,8 +87,8 @@ function buyGenerator(generatorId) {
         gameState.stardust -= gen.cost;
         gen.level++;
         gen.cost = Math.ceil(gen.baseCost * Math.pow(gen.costMultiplier, gen.level));
-        updateGeneratorFleetVisuals(gen); // Update the visual display
-        // updateDisplay();
+        updateGeneratorFleetVisuals(gen);
+        // updateDisplay(); // Handled by game loop
     }
 }
 
@@ -91,106 +96,107 @@ function calculateSPS() {
     return gameState.generators.reduce((total, gen) => total + (gen.level * gen.sps), 0);
 }
 
-// --- Display Update (largely same) ---
+// --- Display Updates ---
 function updateDisplay() {
     stardustCountEl.textContent = formatNumber(Math.floor(gameState.stardust));
     spcCountEl.textContent = formatNumber(gameState.stardustPerClick);
     spsCountEl.textContent = formatNumber(calculateSPS());
 
-    // Click Upgrade
     const clickUpgrade = gameState.clickUpgrade;
     clickUpgradeLevelEl.textContent = formatNumber(clickUpgrade.level);
-    // clickUpgradeBonusEl.textContent = formatNumber(clickUpgrade.bonusPerLevel); // Assuming this is fixed text
+    // Ensure the "+N SPC" text is correct if bonusPerLevel can change, though it's static now
+    // clickUpgradeBonusEl.textContent = formatNumber(clickUpgrade.bonusPerLevel);
     buyClickUpgradeBtn.textContent = `Buy (Cost: ${formatNumber(clickUpgrade.cost)})`;
     buyClickUpgradeBtn.disabled = gameState.stardust < clickUpgrade.cost;
 
-    // Generators
     gameState.generators.forEach(gen => {
         const elements = generatorElements[gen.id];
         if (elements) {
             elements.levelEl.textContent = formatNumber(gen.level);
             elements.buyBtn.textContent = `Buy (Cost: ${formatNumber(gen.cost)})`;
             elements.buyBtn.disabled = gameState.stardust < gen.cost;
-            if(elements.spsEl) elements.spsEl.textContent = formatNumber(gen.sps);
+            if(elements.spsEl) elements.spsEl.textContent = formatNumber(gen.sps); // Update generator's SPS display
         }
     });
 }
 
-function formatNumber(num) { // Same as before, ensure it handles potentially small/large numbers
+function formatNumber(num) {
     num = Math.floor(num);
     if (num < 1000) return num.toString();
-    const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc"];
+    const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"]; // Added more
     const i = Math.floor(Math.log10(Math.abs(num)) / 3);
     if (i >= suffixes.length) return num.toExponential(2);
     const shortNum = (num / Math.pow(1000, i));
-    return shortNum.toFixed(i > 0 ? (shortNum < 10 ? 2 : (shortNum < 100 ? 1 : 0)) : 0) + suffixes[i];
+    // Adjust decimals based on number size
+    let decimals = 0;
+    if (i > 0) { // Only add decimals for K and above
+        if (shortNum < 10) decimals = 2;
+        else if (shortNum < 100) decimals = 1;
+    }
+    return shortNum.toFixed(decimals) + suffixes[i];
 }
 
 // --- NEW Visual & Animation Functions ---
 
 function createBackgroundStars() {
+    if (!backgroundAnimationContainer) return;
     for (let i = 0; i < MAX_BG_STARS; i++) {
         const star = document.createElement('div');
         star.className = 'bg-star';
-        const size = Math.random() * 2.5 + 0.5; // 0.5px to 3px
+        const size = Math.random() * 2.5 + 0.5;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
         star.style.left = `${Math.random() * 100}vw`;
-        star.style.animationDelay = `${Math.random() * 10}s`; // Stagger start
-        star.style.animationDuration = `${Math.random() * 10 + 8}s`; // Vary speed (8-18s)
+        star.style.animationDelay = `${Math.random() * 10}s`;
+        star.style.animationDuration = `${Math.random() * 10 + 8}s`;
         backgroundAnimationContainer.appendChild(star);
     }
 }
 
 function showClickSparks(event) {
-    const rect = clickTarget.getBoundingClientRect(); // Click target's position
-    const containerRect = clickFeedbackContainer.getBoundingClientRect(); // Feedback container's position
-
-    // Calculate click position relative to the feedback container
+    if (!clickFeedbackContainer || !clickTarget) return;
+    const rect = clickTarget.getBoundingClientRect();
+    const containerRect = clickFeedbackContainer.getBoundingClientRect();
     const clickX = event.clientX - containerRect.left;
     const clickY = event.clientY - containerRect.top;
 
-    for (let i = 0; i < 5; i++) { // Create 5 sparks
+    for (let i = 0; i < 5; i++) {
         const spark = document.createElement('div');
         spark.className = 'click-spark';
-        const angle = Math.random() * 360; // Random direction
-        spark.style.setProperty('--angle', `${angle - 90}deg`); // -90 because triangle points up
+        const angle = Math.random() * 360;
+        spark.style.setProperty('--angle', `${angle - 90}deg`);
         spark.style.left = `${clickX}px`;
         spark.style.top = `${clickY}px`;
         clickFeedbackContainer.appendChild(spark);
-        setTimeout(() => spark.remove(), 600); // Match animation duration
+        setTimeout(() => spark.remove(), 600);
     }
 }
 
 function showClickTextFeedback(text, event) {
+    if (!clickFeedbackContainer) return;
     const feedback = document.createElement('div');
     feedback.textContent = text;
     feedback.className = 'click-text-feedback';
-
     const containerRect = clickFeedbackContainer.getBoundingClientRect();
     feedback.style.left = `${event.clientX - containerRect.left}px`;
-    feedback.style.top = `${event.clientY - containerRect.top - 20}px`; // Position above cursor
-
+    feedback.style.top = `${event.clientY - containerRect.top - 20}px`;
     clickFeedbackContainer.appendChild(feedback);
     setTimeout(() => feedback.remove(), 700);
 }
 
-function createStardustParticle(startX, startY, isFromClick = false) {
+// --- MODIFIED: Stardust particle creation, now purely visual for clicks ---
+function createStardustParticle(startX, startY) { // Removed isFromClick
+    if (!stardustParticleFlowContainer || !stardustCountEl) return;
     const particle = document.createElement('div');
     particle.className = 'stardust-particle';
     particle.style.left = `${startX}px`;
     particle.style.top = `${startY}px`;
-    stardustParticleFlowContainer.appendChild(particle); // Add to the correct container
+    stardustParticleFlowContainer.appendChild(particle);
 
-    // Target: Stardust counter element
     const counterRect = stardustCountEl.getBoundingClientRect();
     const flowContainerRect = stardustParticleFlowContainer.getBoundingClientRect();
-
-    // Calculate target relative to the flow container
     const targetX = (counterRect.left + counterRect.width / 2) - flowContainerRect.left;
     const targetY = (counterRect.top + counterRect.height / 2) - flowContainerRect.top;
-
-    // Randomize arrival slightly for a more natural look
     const endX = targetX + (Math.random() - 0.5) * 20;
     const endY = targetY + (Math.random() - 0.5) * 10;
 
@@ -199,69 +205,56 @@ function createStardustParticle(startX, startY, isFromClick = false) {
         { transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0.3)`, opacity: 0.5, offset: 0.9 },
         { transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0.1)`, opacity: 0 }
     ], {
-        duration: STARDUST_PARTICLE_ANIMATION_DURATION * (0.9 + Math.random() * 0.2), // Slightly varied duration
-        easing: 'cubic-bezier(0.3, 0, 0.7, 1)', // Custom ease-in, then fast
+        duration: STARDUST_PARTICLE_ANIMATION_DURATION * (0.9 + Math.random() * 0.2),
+        easing: 'cubic-bezier(0.3, 0, 0.7, 1)',
         fill: 'forwards'
     }).onfinish = () => {
-        particle.remove();
-        if (isFromClick) {
-            gameState.stardust += 1; // Increment by 1 for each click particle
-        } else {
-            // For passive SPS, the stardust is already notionally "earned" and buffered.
-            // The actual increment happens when the game loop decides to "cash in" the buffer.
-            // This function just handles the visual.
-            // If we want each particle to represent 1 stardust from SPS, then increment here.
-            // For now, let's assume SPS particles are purely visual and the buffer handles the amount.
-        }
+        particle.remove(); // Just remove, no stardust logic here
     };
 }
 
-// For particles from manual clicks
-function createStardustParticlesOnClick(amount, event) {
+// --- NEW: Visual particle generation for manual clicks ---
+function createStardustParticlesOnClickVisualsOnly(amount, event) {
+    if (!clickTarget || !stardustParticleFlowContainer) return;
     const clickRect = clickTarget.getBoundingClientRect();
     const flowContainerRect = stardustParticleFlowContainer.getBoundingClientRect();
-
-    // Origin point for click particles (center of clickTarget, relative to flowContainer)
     const originX = (clickRect.left + clickRect.width / 2) - flowContainerRect.left;
     const originY = (clickRect.top + clickRect.height / 2) - flowContainerRect.top;
 
-    const numParticles = Math.min(Math.floor(amount), 10); // Max 10 particles per click visually
-    const stardustPerParticle = amount / numParticles; // How much each visual particle represents
-
-    for (let i = 0; i < numParticles; i++) {
-        // Stagger creation slightly
-        setTimeout(() => {
-            createStardustParticle(originX + (Math.random()-0.5)*20, originY + (Math.random()-0.5)*20, true);
-        }, i * 20); // isFromClick = true
+    let numVisualParticles = 0;
+    if (amount >= 1) {
+        numVisualParticles = Math.min(Math.floor(amount), 10);
+    } else if (amount > 0) {
+        numVisualParticles = 1;
     }
-    // For amounts > 10, directly add the remainder without visual particles to avoid clutter.
-    if (amount > numParticles) {
-        gameState.stardust += (amount - numParticles);
+    if (numVisualParticles === 0) return;
+
+    for (let i = 0; i < numVisualParticles; i++) {
+        setTimeout(() => {
+            createStardustParticle(originX + (Math.random()-0.5)*20, originY + (Math.random()-0.5)*20);
+        }, i * 20);
     }
 }
 
-
-// For particles from passive SPS generation
 function emitSPSParticles() {
     if (stardustBufferForAnimation >= PARTICLE_EMISSION_THRESHOLD) {
         const particlesToEmit = Math.floor(stardustBufferForAnimation / PARTICLE_EMISSION_THRESHOLD);
-        stardustBufferForAnimation -= particlesToEmit * PARTICLE_EMISSION_THRESHOLD; // Consume from buffer
+        stardustBufferForAnimation -= particlesToEmit * PARTICLE_EMISSION_THRESHOLD;
 
-        // Origin for SPS particles (e.g., from generator fleet area or random within flow container)
+        if (!generatorFleetDisplay || !stardustParticleFlowContainer) return;
         const fleetRect = generatorFleetDisplay.getBoundingClientRect();
         const flowContainerRect = stardustParticleFlowContainer.getBoundingClientRect();
 
-        for (let i = 0; i < Math.min(particlesToEmit, 5); i++) { // Max 5 SPS particles per emission cycle visually
+        for (let i = 0; i < Math.min(particlesToEmit, 5); i++) {
             const startX = (fleetRect.left + Math.random() * fleetRect.width) - flowContainerRect.left;
-            const startY = (fleetRect.top + Math.random() * fleetRect.height / 2) - flowContainerRect.top; // From top half of fleet
-            createStardustParticle(startX, startY, false); // isFromClick = false
+            const startY = (fleetRect.top + Math.random() * fleetRect.height / 2) - flowContainerRect.top;
+            createStardustParticle(startX, startY);
         }
     }
 }
 
-
 function updateGeneratorFleetVisuals(changedGen) {
-    // Clear existing visuals ONLY for this specific generator type
+    if (!generatorFleetDisplay) return;
     const existingVisuals = generatorFleetDisplay.querySelectorAll(`.visual-generator-icon.${changedGen.visualClass}`);
     existingVisuals.forEach(v => v.remove());
 
@@ -269,12 +262,12 @@ function updateGeneratorFleetVisuals(changedGen) {
     for (let i = 0; i < count; i++) {
         const visualIcon = document.createElement('div');
         visualIcon.className = `visual-generator-icon ${changedGen.visualClass}`;
-        visualIcon.style.setProperty('--delay', `${i * 0.03}s`); // Stagger pop-in animation
+        visualIcon.style.setProperty('--delay', `${i * 0.03}s`);
         generatorFleetDisplay.appendChild(visualIcon);
     }
 }
 
-// --- Saving and Loading (largely same, ensure visual state is restored) ---
+// --- Saving and Loading ---
 function saveGame() {
     gameState.lastSaveTime = Date.now();
     try {
@@ -290,17 +283,26 @@ function loadGame() {
             const loadedState = JSON.parse(savedGame);
             const timeSinceLastSave = Date.now() - (loadedState.lastSaveTime || Date.now());
 
-            Object.assign(gameState.clickUpgrade, loadedState.clickUpgrade);
-            loadedState.generators.forEach((savedGen, index) => {
-                if (gameState.generators[index]) {
-                    Object.assign(gameState.generators[index], savedGen);
-                } else { gameState.generators[index] = savedGen; }
-            });
+            // Carefully merge states, prioritizing loaded simple values and object structures
             gameState.stardust = loadedState.stardust || 0;
             gameState.stardustPerClick = loadedState.stardustPerClick || 1;
             gameState.lastSaveTime = loadedState.lastSaveTime || Date.now();
 
-            const offlineSPS = gameState.generators.reduce((total, gen) => total + ((gen.level || 0) * (gen.sps || 0)), 0);
+            if (loadedState.clickUpgrade) {
+                Object.assign(gameState.clickUpgrade, loadedState.clickUpgrade);
+            }
+
+            if (loadedState.generators && Array.isArray(loadedState.generators)) {
+                loadedState.generators.forEach((savedGen, index) => {
+                    if (gameState.generators[index]) {
+                        Object.assign(gameState.generators[index], savedGen);
+                    } else { // Should not happen if base structure is same
+                        gameState.generators[index] = savedGen;
+                    }
+                });
+            }
+            
+            const offlineSPS = calculateSPS(); // Calculate SPS based on loaded levels
             const offlineStardustGained = offlineSPS * (timeSinceLastSave / 1000);
 
             if (offlineStardustGained > 0) {
@@ -308,17 +310,15 @@ function loadGame() {
                 showSaveStatus(`Welcome back! +${formatNumber(offlineStardustGained)} Stardust while away.`);
             } else { showSaveStatus('Game Loaded!'); }
 
-            // Restore visual state of generators
             gameState.generators.forEach(gen => updateGeneratorFleetVisuals(gen));
 
         } catch (error) {
             console.error("Error loading game:", error);
             showSaveStatus('Error loading. Starting fresh.');
-            resetGameConfirm(false); // No confirm prompt on load error
+            resetGameConfirm(false);
         }
     } else {
         showSaveStatus('No save found. New game started.');
-        // Initialize fleet visuals for a new game (empty)
         gameState.generators.forEach(gen => updateGeneratorFleetVisuals(gen));
     }
     updateDisplay();
@@ -328,7 +328,6 @@ function resetGameConfirm(confirmPrompt = true) {
     const doReset = confirmPrompt ? confirm("Are you sure you want to reset all progress?") : true;
     if (doReset) {
         localStorage.removeItem('cosmicClickerDeluxeSave');
-        // Define initial state again to ensure a clean reset
         const initialClickUpgrade = { level: 0, cost: 10, baseCost: 10, bonusPerLevel: 1, costMultiplier: 1.15 };
         const initialGenerators = [
             { id: 'gen1', name: 'Nebula Drone', level: 0, sps: 1, baseSps: 1, cost: 50, baseCost: 50, costMultiplier: 1.18, visualClass: 'visual-gen1' },
@@ -336,44 +335,44 @@ function resetGameConfirm(confirmPrompt = true) {
         ];
         gameState.stardust = 0;
         gameState.stardustPerClick = 1;
-        gameState.clickUpgrade = { ...initialClickUpgrade };
+        gameState.clickUpgrade = { ...initialClickUpgrade }; // Use spread for new object
+        // Deep copy for generators array of objects
         gameState.generators = initialGenerators.map(g => ({ ...g }));
         gameState.lastSaveTime = Date.now();
         stardustBufferForAnimation = 0;
 
-        gameState.generators.forEach(gen => updateGeneratorFleetVisuals(gen)); // Reset visual fleet
+        gameState.generators.forEach(gen => updateGeneratorFleetVisuals(gen));
         showSaveStatus('Game Reset!');
         updateDisplay();
     }
 }
 
 function showSaveStatus(message) {
+    if (!saveStatusEl) return;
     saveStatusEl.textContent = message;
     setTimeout(() => { saveStatusEl.textContent = ''; }, 4000);
 }
 
 // --- Game Loop ---
-let lastUpdateTime = Date.now();
-const MAIN_UPDATE_INTERVAL = 100; // ms, for display & non-critical logic
+let lastUpdateTime = 0; // Will be set in initializeGame
+const MAIN_UPDATE_INTERVAL = 100;
 let timeSinceLastMainUpdate = 0;
 
 function gameLoop(currentTime) {
-    const deltaTime = (currentTime - lastUpdateTime) / 1000; // seconds
+    if (!lastUpdateTime) lastUpdateTime = currentTime; // Initialize on first frame
+    const deltaTime = (currentTime - lastUpdateTime) / 1000;
     lastUpdateTime = currentTime;
 
-    // Passive Stardust Gain Logic
     const sps = calculateSPS();
-    gameState.stardust += sps * deltaTime; // Actual stardust increment
-    stardustBufferForAnimation += sps * deltaTime; // Buffer for visuals
+    gameState.stardust += sps * deltaTime;
+    stardustBufferForAnimation += sps * deltaTime;
 
-    // Emit SPS particles based on buffer and rate limiting
     particleEmissionRateLimiter += deltaTime * 1000;
-    if (particleEmissionRateLimiter > 150) { // Emit roughly every 150ms if buffer allows
+    if (particleEmissionRateLimiter > 150) {
         emitSPSParticles();
         particleEmissionRateLimiter = 0;
     }
 
-    // Main display and button state updates (less frequent than every frame)
     timeSinceLastMainUpdate += deltaTime * 1000;
     if (timeSinceLastMainUpdate >= MAIN_UPDATE_INTERVAL) {
         updateDisplay();
@@ -385,6 +384,17 @@ function gameLoop(currentTime) {
 
 // --- Initialization ---
 function initializeGame() {
+    // Defensive checks for critical DOM elements
+    if (!clickTarget || !buyClickUpgradeBtn || !saveButton || !loadButton || !resetButton) {
+        console.error("Critical UI element not found. Game cannot initialize properly.");
+        // Optionally, display an error message to the user on the page itself.
+        const errorMsgDiv = document.createElement('div');
+        errorMsgDiv.textContent = "Error: Game UI elements missing. Please refresh or check the console.";
+        errorMsgDiv.style.color = "red"; errorMsgDiv.style.textAlign = "center"; errorMsgDiv.style.padding = "20px";
+        document.body.prepend(errorMsgDiv);
+        return;
+    }
+
     createBackgroundStars();
 
     clickTarget.addEventListener('click', manualClick);
@@ -392,18 +402,17 @@ function initializeGame() {
     gameState.generators.forEach(gen => {
         const btn = generatorElements[gen.id]?.buyBtn;
         if (btn) btn.addEventListener('click', () => buyGenerator(gen.id));
+        else console.warn(`Button for generator ${gen.id} not found.`);
     });
 
     saveButton.addEventListener('click', saveGame);
     loadButton.addEventListener('click', loadGame);
-    resetButton.addEventListener('click', resetGameConfirm);
+    resetButton.addEventListener('click', () => resetGameConfirm(true)); // Ensure confirm prompt for button click
 
-    loadGame(); // Load game data
-    // updateDisplay(); // Initial display (called by loadGame or gameLoop)
-    // gameState.generators.forEach(gen => updateGeneratorFleetVisuals(gen)); // Also called by loadGame
+    loadGame();
 
     console.log("Cosmic Clicker Deluxe Initialized!");
-    lastUpdateTime = performance.now(); // Use performance.now() for rAF
+    lastUpdateTime = performance.now();
     requestAnimationFrame(gameLoop);
 }
 
