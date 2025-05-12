@@ -10,9 +10,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="background-animation-container">
-        <!-- Stars/particles for background will be generated here -->
-    </div>
+    <div id="background-animation-container"></div>
 
     <div class="container">
         <header>
@@ -24,38 +22,46 @@
             </div>
         </header>
 
-        <!-- Added game-content-wrapper -->
         <div class="game-content-wrapper">
             <main>
                 <div class="click-area">
-                    <div id="click-target" class="click-target-shape">
-                        <!-- This will be styled as our central clickable shape -->
-                    </div>
-                    <div id="click-feedback-container"></div> <!-- For +N popups and click sparks -->
+                    <div id="click-target" class="click-target-shape"></div>
+                    <div id="click-feedback-container"></div>
                 </div>
-                <div id="stardust-particle-flow-container">
-                    <!-- Stardust particles will animate towards the counter from here -->
-                </div>
+                <div id="stardust-particle-flow-container"></div>
             </main>
 
             <aside class="upgrades-panel">
                 <section class="upgrades-section">
                     <h2><span class="icon-shape section-icon upgrade-sec-icon"></span>Click Power</h2>
                     <div class="upgrade-controls">
+                        <!-- Quantum Tapper -->
                         <div class="upgrade">
                             <h3><span class="icon-shape item-icon click-power-icon"></span>Quantum Tapper</h3>
                             <p>Level: <span id="click-upgrade-level">0</span></p>
-                            <p>+<span id="click-upgrade-bonus">1</span> SPC</p>
+                            <p>+<span id="click-upgrade-bonus-display">1</span> Base SPC</p> <!-- Clarified display -->
                             <button id="buy-click-upgrade" data-cost="10">Buy (Cost: 10)</button>
+                        </div>
+                        <!-- Synergy Spark -->
+                        <div class="upgrade">
+                            <h3><span class="icon-shape item-icon synergy-icon"></span>Synergy Spark</h3>
+                            <p>Level: <span id="synergy-upgrade-level">0</span></p>
+                            <p>Adds <span id="synergy-bonus-display">0</span>% of SPS to click</p>
+                            <button id="buy-synergy-upgrade" data-cost="150">Buy (Cost: 150)</button>
+                        </div>
+                        <!-- Critical Surge -->
+                        <div class="upgrade">
+                            <h3><span class="icon-shape item-icon crit-icon"></span>Critical Surge</h3>
+                            <p>Crit Chance: <span id="crit-chance-display">0</span>%</p>
+                            <p>Crit Multiplier: x<span id="crit-multiplier-display">2</span></p>
+                            <button id="buy-crit-upgrade" data-cost="500">Buy (Cost: 500)</button>
                         </div>
                     </div>
                 </section>
 
                 <section class="generators-section">
                     <h2><span class="icon-shape section-icon generator-sec-icon"></span>Stardust Generators</h2>
-                    <div id="generator-fleet-display">
-                        <!-- Visual representation of purchased generators -->
-                    </div>
+                    <div id="generator-fleet-display"></div>
                     <div class="generator-controls">
                         <div class="generator">
                             <h3><span class="icon-shape item-icon drone-icon"></span>Nebula Drone</h3>
@@ -73,7 +79,6 @@
                 </section>
             </aside>
         </div>
-        <!-- End game-content-wrapper -->
 
          <footer>
              <button id="save-button">Save</button>
