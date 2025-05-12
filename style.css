@@ -1,20 +1,16 @@
+/* --- Global Styles & Font --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
     font-family: 'Orbitron', sans-serif;
     background-color: #0a0a1f; /* Deep space blue/purple */
     color: #d0d0ff; /* Light lavender */
-    background-color: #0a0a1f;
-    color: #d0d0ff;
     display: flex;
     justify-content: center;
     align-items: center; /* Align center for taller content */
-    align-items: center;
     min-height: 100vh;
     padding: 20px 0; /* Add some padding if content is very tall */
     overflow-x: hidden; /* Prevent horizontal scroll from minor overflows */
     overflow-y: auto;   /* Allow vertical scroll if content overflows */
-    padding: 20px; /* Add padding around container */
-    overflow: hidden; /* Prevents scrollbars from minor animation overflows */
     position: relative;
 }
 
@@ -40,14 +36,8 @@ body {
     95% { transform: scale(0.8); opacity: 0.5;}
     100% { transform: translateY(110vh) scale(0.5); opacity: 0; }
 }
-/* --- Background Animation (No change) --- */
-#background-animation-container { /* ... same ... */ }
-.bg-star { /* ... same ... */ }
-@keyframes fallAndTwinkle { /* ... same ... */ }
-
 
 /* --- Main Container --- */
-/* --- Main Container RESHAPED --- */
 .container {
     background: rgba(20, 20, 50, 0.85);
     backdrop-filter: blur(8px);
@@ -57,34 +47,19 @@ body {
     box-shadow: 0 0 40px rgba(120, 120, 255, 0.3), inset 0 0 20px rgba(0,0,0,0.4);
     width: 90%;
     max-width: 1100px; /* Increased max-width for wider layout */
-    background: rgba(20, 20, 50, 0.88); /* Slightly more opaque */
-    backdrop-filter: blur(10px); /* Increased blur */
-    padding: 25px 30px;
-    border-radius: 30px; /* More rounded */
-    border: 2px solid rgba(100, 100, 200, 0.6);
-    box-shadow: 0 0 50px rgba(120, 120, 255, 0.35), inset 0 0 25px rgba(0,0,0,0.45);
-    width: 95%;
-    max-width: 1300px; /* SIGNIFICANTLY WIDER */
-    min-height: 650px; /* Ensure a minimum height */
-    max-height: 90vh;  /* Max height relative to viewport */
     display: flex;
     flex-direction: column;
     gap: 20px; /* Adjusted gap */
-    gap: 20px;
     position: relative;
     z-index: 1;
-    overflow-y: auto; /* Allow scroll within container if content exceeds max-height */
 }
 
 header { text-align: center; }
-header { text-align: center; flex-shrink: 0; /* Prevent header from shrinking */ }
 h1 {
     color: #82aaff;
     text-shadow: 0 0 8px #82aaff, 0 0 16px #82aaff, 0 0 2px #fff;
     margin-bottom: 15px; /* Adjusted margin */
     font-size: 2.5em; /* Slightly adjusted font size */
-    margin-bottom: 15px;
-    font-size: 2.6em;
     letter-spacing: 1px;
 }
 
@@ -105,58 +80,38 @@ h1 {
     background-color: #f0e060;
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
-.stats-display { /* ... same ... */ }
-.stats-display p { /* ... same ... */ }
-.stats-display span[id] { /* ... same ... */ }
-.icon-shape.stardust-icon { /* ... same ... */ }
-
 
 /* --- NEW: Game Content Wrapper for side-by-side layout --- */
-/* --- Game Content Wrapper (No major change, relies on container width) --- */
 .game-content-wrapper {
     display: flex;
     flex-direction: row; /* Side-by-side by default */
     gap: 25px; /* Gap between main click area and upgrades panel */
-    flex-direction: row;
-    gap: 30px; /* Slightly increased gap */
     width: 100%;
-    flex-grow: 1; /* Allow this wrapper to take available vertical space */
-    overflow: hidden; /* Prevent internal scroll issues */
 }
 
 /* --- Main Interaction: Click Area --- */
 main {
     flex: 1; /* Takes 1 part of the available space */
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Center the click area vertically */
     gap: 15px;
     min-width: 250px; /* Ensure it doesn't get too squished */
-    min-width: 300px; /* Increased min-width */
-    padding: 10px; /* Add some padding */
 }
 .click-area {
     position: relative;
     width: 180px; height: 180px; /* Keep click target size consistent */
-    width: 200px; height: 200px; /* Slightly larger click area */
     display: flex; justify-content: center; align-items: center;
     margin-bottom: 10px;
     margin-top: 20px; /* Add some top margin if needed */
 }
 #click-target {
     width: 150px; height: 150px;
-#click-target { /* Blob will change via JS now */
-    width: 180px; height: 180px; /* Slightly larger blob */
-    /* Initial background set in JS or as a fallback */
     background: radial-gradient(circle, #c89aff 0%, #9370db 60%, #6a0dad 100%);
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     cursor: pointer;
     transition: transform 0.1s ease, box-shadow 0.2s ease, border-radius 0.3s ease;
     box-shadow: 0 0 20px #9370db, 0 0 35px #9370db, inset 0 0 15px rgba(255,220,255,0.4);
-    transition: transform 0.1s ease, box-shadow 0.2s ease, border-radius 0.3s ease, background 0.3s ease; /* Added background transition */
-    box-shadow: 0 0 25px #9370db, 0 0 40px #9370db, inset 0 0 18px rgba(255,220,255,0.4);
     animation: pulseBlob 5s infinite ease-in-out;
 }
 @keyframes pulseBlob {
@@ -172,10 +127,6 @@ main {
     background: radial-gradient(circle, #e6ceff 0%, #bca0f7 60%, #824bc2 100%);
     animation: none;
 }
-/* Keyframes pulseBlob, click-target:hover, :active (No change) */
-@keyframes pulseBlob { /* ... same ... */ }
-#click-target:hover { /* ... same ... */ }
-#click-target:active { /* ... same ... */ }
 
 #click-feedback-container {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -204,11 +155,6 @@ main {
     from { opacity: 1; transform: translate(-50%, 0); }
     to { opacity: 0; transform: translate(-50%, -60px); }
 }
-#click-feedback-container { /* ... same ... */ }
-.click-spark { /* ... same ... */ }
-@keyframes shootSpark { /* ... same ... */ }
-.click-text-feedback { /* ... same ... */ }
-@keyframes fadeUpText { /* ... same ... */ }
 
 /* --- Stardust Particle Flow --- */
 #stardust-particle-flow-container {
@@ -218,10 +164,6 @@ main {
     left: 50%;
     transform: translateX(-50%);
     width: 80%; height: 120px; /* Adjust size as needed */
-    bottom: 60px; /* Adjust if footer size changes */
-    left: 0; right: 0; /* Span full width of .container */
-    margin: 0 auto; /* Center it */
-    width: 90%; height: 150px;
     pointer-events: none;
     z-index: 5; /* Ensure it's above the main content but below popups if any */
 }
@@ -232,27 +174,18 @@ main {
     border-radius: 2px;
     box-shadow: 0 0 6px #f0e060, 0 0 3px #fff;
     opacity: 0;
-    z-index: 5;
 }
-.stardust-particle { /* ... same ... */ }
 
 /* --- Upgrades & Generators Panel --- */
 .upgrades-panel {
     flex: 2; /* Takes 2 parts of the available space, making it wider than main */
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust minmax as needed */
-    flex: 2;
-    display: flex; /* Use flex for sections */
-    flex-direction: column; /* Stack sections vertically */
     gap: 20px;
     background: rgba(30, 30, 70, 0.4);
     padding: 15px; /* Adjusted padding */
-    padding: 20px;
     border-radius: 15px;
     min-width: 300px; /* Ensure it doesn't get too squished */
-    min-width: 350px; /* Increased min-width */
-    overflow-y: auto; /* Allow scroll within this panel if it has too many items */
-    max-height: calc(100% - 20px); /* Ensure it fits within game-content-wrapper */
 }
 
 /* Responsive stacking for game content */
@@ -269,12 +202,6 @@ main {
     }
     .click-area { margin-top: 0;}
     #stardust-particle-flow-container { bottom: 120px; /* May need adjustment when stacked */ }
-@media (max-width: 900px) { /* Adjusted breakpoint for stacking */
-    .game-content-wrapper { flex-direction: column; }
-    main { width: 100%; justify-content: flex-start; /* Align top when stacked */ }
-    .upgrades-panel { width: 100%; max-height: none; /* Allow full height when stacked */ }
-    .click-area { width: 180px; height: 180px; } /* Can revert to smaller if needed */
-    #click-target { width: 150px; height: 150px; }
 }
 
 
@@ -382,7 +309,6 @@ button:disabled {
     background: #555c6e;
     cursor: not-allowed; opacity: 0.6;
     box-shadow: 0 3px 0px #3e4350;
-    flex-direction: column;
 }
 
 footer { margin-top: 15px; text-align: center; padding-top: 12px; border-top: 1px solid rgba(100, 100, 200, 0.3); }
@@ -393,46 +319,3 @@ footer button:active:not(:disabled) { box-shadow: 0 1px 0px #0056b3; }
 #reset-button:hover:not(:disabled) { background: linear-gradient(145deg, #e84a5f, #ff7f7f); box-shadow: 0 3px 0px #b02a37, 0 0 15px rgba(255, 107, 107, 0.5); }
 
 #save-status { margin-top: 8px; font-style: italic; color: #aaaac5; min-height: 1.2em; }
-.upgrades-section h2, .generators-section h2 { /* ... same ... */ }
-.icon-shape { /* ... same ... */ }
-.section-icon { /* ... same ... */ }
-.upgrade-sec-icon { /* ... same ... */ }
-.generator-sec-icon { /* ... same ... */ }
-
-.item-icon { width: 18px; height: 18px; margin-right: 10px; } /* Slightly larger */
-.click-power-icon { /* ... same ... */ }
-.drone-icon { /* ... same ... */ }
-.collector-icon { /* ... same ... */ }
-/* New Icons */
-.synergy-icon {
-    background-color: #f7ff89; /* Light yellow */
-    clip-path: polygon(50% 0%, 75% 25%, 75% 75%, 50% 100%, 25% 75%, 25% 25%); /* Upward Arrow-like Hex */
-}
-.crit-icon {
-    background-color: #ff8989; /* Light red */
-    width: 20px; height: 20px;
-    clip-path: polygon(50% 0%, 61.8% 38.2%, 100% 38.2%, 69.1% 61.8%, 80.9% 100%, 50% 76.4%, 19.1% 100%, 30.9% 61.8%, 0% 38.2%, 38.2% 38.2%); /* Explosion/Star burst */
-}
-
-
-.upgrade-controls, .generator-controls { /* ... same ... */ }
-.upgrade, .generator { /* ... same ... */ }
-.upgrade:hover, .generator:hover { /* ... same ... */ }
-.upgrade h3, .generator h3 { /* ... same ... */ }
-.upgrade p, .generator p { /* ... same ... */ }
-
-#generator-fleet-display { /* ... same ... */ }
-.visual-generator-icon { /* ... same ... */ }
-.visual-gen1 { /* ... same ... */ }
-.visual-gen2 { /* ... same ... */ }
-@keyframes popIn { /* ... same ... */ }
-
-button { /* ... same ... */ }
-button:hover:not(:disabled) { /* ... same ... */ }
-button:active:not(:disabled) { /* ... same ... */ }
-button:disabled { /* ... same ... */ }
-
-footer { /* ... same ... */ flex-shrink: 0; /* Prevent footer from shrinking */ }
-footer button { /* ... same ... */ }
-/* ... other footer button styles ... */
-#save-status { /* ... same ... */ }
