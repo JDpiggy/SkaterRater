@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Clicker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cosmic Clicker</h1>
+
+        <div class="stats-display">
+            <p>Stardust: <span id="stardust-count">0</span></p>
+            <p>Stardust Per Second (SPS): <span id="sps-count">0</span></p>
+            <p>Stardust Per Click (SPC): <span id="spc-count">1</span></p>
+        </div>
+
+        <div class="click-area">
+            <button id="click-button" class="click-button">
+                <img src="placeholder-nebula.png" alt="Click to Gain Stardust" width="200">
+                 <!-- Find or create a simple nebula/planet image -->
+            </button>
+             <div id="click-feedback-container"></div> <!-- For +1 popups -->
+        </div>
+
+        <div class="upgrades-section">
+            <h2>Upgrades</h2>
+            <div class="upgrade-controls">
+                <div class="upgrade">
+                    <h3>Manual Clicker</h3>
+                    <p>Level: <span id="click-upgrade-level">0</span></p>
+                    <p>+<span id="click-upgrade-bonus">1</span> SPC per level</p>
+                    <button id="buy-click-upgrade" data-cost="10">Buy (Cost: 10 Stardust)</button>
+                </div>
+            </div>
+
+            <h2>Generators (Automatic Stardust)</h2>
+            <div class="generator-controls">
+                <!-- Generator 1: Mining Drone -->
+                <div class="generator">
+                    <h3>Mining Drone</h3>
+                    <p>Generates <span id="gen1-sps">1</span> SPS per drone</p>
+                    <p>Owned: <span id="gen1-level">0</span></p>
+                    <button id="buy-gen1" data-cost="50">Buy (Cost: 50 Stardust)</button>
+                </div>
+                 <!-- Add more generators here later! -->
+                 <div class="generator">
+                    <h3>Solar Sail Collector</h3>
+                    <p>Generates <span id="gen2-sps">5</span> SPS per collector</p>
+                    <p>Owned: <span id="gen2-level">0</span></p>
+                    <button id="buy-gen2" data-cost="250">Buy (Cost: 250 Stardust)</button>
+                </div>
+            </div>
+        </div>
+
+         <div class="save-load">
+             <button id="save-button">Save Game</button>
+             <button id="load-button">Load Game</button>
+             <button id="reset-button">Reset Game</button>
+             <p id="save-status"></p>
+         </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
