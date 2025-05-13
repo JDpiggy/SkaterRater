@@ -85,26 +85,28 @@
 
         .quarterpipe-ramp {
             stroke: #4A0078; /* Darker purple from your theme */
-            stroke-width: 6;   /* A bit thicker for visibility */
+            stroke-width: 6;
             stroke-linecap: round;
             fill: none;
         }
 
         #skateboard {
-            offset-path: path("M15,85 C15,40 60,15 85,15"); /* Define the motion path */
-            offset-rotate: auto; /* Skateboard aligns to path tangent */
-            /* If skateboard orientation is off by 90deg, try "auto 90deg" or adjust SVG drawing */
+            /* Path: M(start) C(control1) (control2) (end) */
+            /* Starts bottom-left (15,85), moves horizontally (control 50,85), */
+            /* then curves up to top-right (85,15), arriving vertically (control 85,50) */
+            offset-path: path("M15,85 C50,85 85,50 85,15");
+            offset-rotate: auto;
             animation: skateUpAndDown 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
         }
 
         .board-deck {
-            fill: #EAEAEA; /* Light color for contrast, from body text */
+            fill: #EAEAEA;
             stroke: #333333;
             stroke-width: 0.5;
         }
 
         .board-wheel {
-            fill: #2A2A2A; /* Dark grey for wheels */
+            fill: #2A2A2A;
         }
 
         @keyframes skateUpAndDown {
@@ -141,21 +143,18 @@
 
         <div id="loadingAnimation" class="hidden">
             <svg viewBox="0 0 100 100" class="skate-animation-svg">
-                <!-- Define the quarterpipe path once -->
                 <defs>
-                    <path id="quarterpipeCurve" d="M15,85 C15,40 60,15 85,15" />
+                    <!-- Path: M(start) C(control1) (control2) (end) -->
+                    <!-- Starts bottom-left (15,85), moves horizontally (control 50,85), -->
+                    <!-- then curves up to top-right (85,15), arriving vertically (control 85,50) -->
+                    <path id="quarterpipeCurve" d="M15,85 C50,85 85,50 85,15" />
                 </defs>
 
-                <!-- Draw the visual ramp using the defined path -->
                 <use href="#quarterpipeCurve" class="quarterpipe-ramp" />
 
-                <!-- Skateboard group: its (0,0) point will follow the offset-path -->
                 <g id="skateboard">
-                    <!-- Skateboard elements drawn relative to the group's (0,0) -->
-                    <!-- Wheels: radius 3. Bottom of wheel at y=0. Center of wheel at y=-3. -->
                     <circle class="board-wheel" cx="-8" cy="-3" r="3" />
                     <circle class="board-wheel" cx="8" cy="-3" r="3" />
-                    <!-- Deck: Sits above the wheels. Bottom of deck at y=-7. Top at y=-12. -->
                     <rect class="board-deck" x="-14" y="-11" width="28" height="4" rx="1" ry="1" />
                 </g>
             </svg>
@@ -292,7 +291,7 @@
                 }
                 loadingAnimation.classList.add('hidden');
                 resultDiv.classList.remove('hidden');
-            }, 2000); // Reduced timeout slightly to match animation speed
+            }, 3000); // Reverted timeout to 3000ms
         });
 
         function calculateScore(text, currentDiscipline) {
