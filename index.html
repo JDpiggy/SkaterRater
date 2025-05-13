@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skate Skill Rater</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>SKILL_RATER.EXE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #1a1a1a; /* Dark background */
-            color: #e0e0e0; /* Light text */
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #0D0D0D; /* Very dark grey / Off-black */
+            color: #EAEAEA; /* Light grey text */
             margin: 0;
             padding: 20px;
             display: flex;
@@ -18,57 +18,61 @@
             justify-content: center;
             min-height: 100vh;
             text-align: center;
-            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+            overflow-x: hidden;
         }
 
         .container {
-            background: rgba(40, 40, 40, 0.85); /* Darker semi-transparent card */
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.5); /* Neon glow */
-            border: 2px solid #00FFFF; /* Cyan border */
+            background: rgba(10, 10, 10, 0.8); /* Darker semi-transparent card */
+            padding: 30px 40px;
+            border-radius: 8px;
+            border: 1px solid #9D00FF; /* Vibrant Purple border */
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.3), 0 0 25px rgba(157, 0, 255, 0.2); /* Subtle purple glow */
             max-width: 600px;
             width: 90%;
         }
 
         h1 {
-            font-family: 'Bangers', cursive;
-            font-size: 3.5em;
-            color: #FF00FF; /* Neon Pink */
-            text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
-            margin-bottom: 25px;
-            letter-spacing: 2px;
+            font-family: 'Audiowide', cursive;
+            font-size: 2.8em;
+            color: #9D00FF; /* Vibrant Purple */
+            text-shadow: 0 0 5px #9D00FF, 0 0 10px #C77DFF;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
 
         select, textarea, button {
-            width: 90%;
-            padding: 12px;
+            width: 100%; /* Full width within container padding */
+            padding: 12px 15px;
             margin-bottom: 20px;
-            border-radius: 8px;
-            border: 2px solid #00FF00; /* Neon Green */
-            background-color: #2a2a2a; /* Darker input fields */
-            color: #e0e0e0;
+            border-radius: 4px;
+            border: 1px solid #4A0078; /* Darker Purple */
+            background-color: #1A1A1A; /* Dark input fields */
+            color: #EAEAEA;
+            font-family: 'Share Tech Mono', monospace;
             font-size: 1em;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
 
         textarea {
-            height: 120px;
+            height: 130px;
             resize: vertical;
         }
 
         button {
-            background-color: #FF00FF; /* Neon Pink */
-            color: #1a1a1a; /* Dark text on button */
+            background-color: #9D00FF; /* Vibrant Purple */
+            color: #FFFFFF;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid #FF00FF;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #9D00FF;
         }
 
         button:hover {
-            background-color: #00FFFF; /* Cyan on hover */
-            border-color: #00FFFF;
-            box-shadow: 0 0 15px #00FFFF;
+            background-color: #B041FF; /* Lighter Purple on hover */
+            box-shadow: 0 0 10px #9D00FF;
+        }
+        button:active {
+            background-color: #7A00CC; /* Darker Purple on active */
         }
 
         .hidden {
@@ -76,124 +80,92 @@
         }
 
         #loadingAnimation {
-            width: 220px; /* Increased width to accommodate ramps and movement */
-            height: 120px; /* Increased height for animation arc */
-            margin: 20px auto;
+            width: 100px; /* Container size */
+            height: 100px;
+            margin: 30px auto;
             position: relative;
-            overflow: hidden; /* Keep icon within bounds */
         }
 
-        .ramp-floor {
-            width: 100%;
-            height: 10px;
-            background-color: #444; /* Darker grey for floor */
+        .loading-square {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            border-radius: 3px;
-        }
-        .ramp-visual {
-            width: 50px; /* Width of the ramp's sloped part */
-            height: 90px; /* Height of the ramp */
-            background: linear-gradient(to top, #666, #888); /* Ramp gradient */
-            position: absolute;
-            bottom: 10px; /* Sits on the floor */
-            border-top: 3px solid #aaa;
-        }
-        .ramp-left-visual {
-            left: 10px; /* Positioned slightly inwards */
-            clip-path: polygon(0 100%, 100% 0, 100% 100%); /* Slanted inwards */
-            border-top-left-radius: 50% 20%;
-            border-top-right-radius: 10%;
-
-        }
-        .ramp-right-visual {
-            right: 10px; /* Positioned slightly inwards */
-            clip-path: polygon(0 0, 100% 100%, 0 100%); /* Slanted inwards */
-            border-top-right-radius: 50% 20%;
-            border-top-left-radius: 10%;
+            top: 50%;
+            left: 50%;
+            border-style: solid;
+            border-width: 2px; /* Thinner border for minimalist look */
         }
 
-        #skateIconContainer {
-            width: 40px; /* Skateboard icon size */
+        .loading-square.outer {
+            width: 80px;
+            height: 80px;
+            border-color: #9D00FF; /* Vibrant Purple */
+            animation: animOuter 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .loading-square.middle {
+            width: 50px;
+            height: 50px;
+            border-color: #C77DFF; /* Lighter Purple */
+            animation: animMiddle 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .loading-square.inner {
+            width: 20px;
             height: 20px;
-            position: absolute;
-            bottom: 15px; /* Starts on the floor */
-            left: 50%; /* Initial horizontal center */
-            /* transform: translateX(-50%); // Applied in animation */
-        }
-        #skateIconContainer.animate {
-            animation: halfPipeRide 2.5s infinite ease-in-out;
-        }
-        #skateIconSvg {
-            width: 100%;
-            height: 100%;
-            fill: #00FF00; /* Neon Green skateboard */
+            border-color: #FFFFFF; /* White */
+            animation: animInner 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
-        @keyframes halfPipeRide {
-            0% { /* Bottom center */
-                transform: translateX(-50%) translateY(0px) rotate(0deg);
-                left: 50%;
-            }
-            20% { /* Top of left ramp */
-                transform: translateX(0%) translateY(-70px) rotate(-40deg); /* Move origin for rotate */
-                left: 15%; /* Moves towards left edge of animation area */
-            }
-            25% { /* Peak, slightly turning */
-                 transform: translateX(0%) translateY(-75px) rotate(0deg);
-                left: 15%;
-            }
-            40% { /* Bottom center, coming from left */
-                transform: translateX(-50%) translateY(0px) rotate(0deg);
-                left: 50%;
-            }
-            /* Symmetrical for right side */
-            60% { /* Top of right ramp */
-                transform: translateX(-100%) translateY(-70px) rotate(40deg);/* Move origin for rotate */
-                left: 85%; /* Moves towards right edge */
-            }
-             65% { /* Peak, slightly turning */
-                 transform: translateX(-100%) translateY(-75px) rotate(0deg);
-                left: 85%;
-            }
-            80% { /* Bottom center, coming from right */
-                transform: translateX(-50%) translateY(0px) rotate(0deg);
-                left: 50%;
-            }
-            100% { /* Bottom center, end of cycle */
-                transform: translateX(-50%) translateY(0px) rotate(0deg);
-                left: 50%;
-            }
+        @keyframes animOuter {
+            0%   { transform: translate(-50%, -50%) rotate(0deg) scale(0.9); opacity: 0.7; }
+            50%  { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(360deg) scale(0.9); opacity: 0.7; }
         }
+
+        @keyframes animMiddle {
+            0%   { transform: translate(-50%, -50%) rotate(0deg) scale(1.1); opacity: 1; }
+            50%  { transform: translate(-50%, -50%) rotate(-180deg) scale(0.9); opacity: 0.7; } /* Reverse rotation */
+            100% { transform: translate(-50%, -50%) rotate(-360deg) scale(1.1); opacity: 1; }
+        }
+
+        @keyframes animInner { /* Slightly different timing/effect for variation */
+            0%   { transform: translate(-50%, -50%) rotate(45deg) scale(0.8); opacity: 0.6; }
+            25%  { transform: translate(-50%, -50%) rotate(135deg) scale(1.2); opacity: 1; }
+            50%  { transform: translate(-50%, -50%) rotate(225deg) scale(0.8); opacity: 0.6; }
+            75%  { transform: translate(-50%, -50%) rotate(315deg) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(405deg) scale(0.8); opacity: 0.6; } /* 405 = 360 + 45 */
+        }
+
 
         #result {
             margin-top: 25px;
         }
         #result h2 {
-            color: #00FFFF; /* Cyan for score heading */
-            font-size: 1.8em;
+            color: #C77DFF; /* Lighter Purple for score heading */
+            font-size: 1.6em;
         }
         #scoreValue {
-            color: #00FF00; /* Neon Green for score value */
+            color: #9D00FF; /* Vibrant Purple for score value */
             font-weight: bold;
+            font-size: 1.8em; /* Make score value prominent */
         }
         #feedbackMessage {
-            color: #FFA500; /* Bright Orange for feedback */
+            color: #B0B0B0; /* Slightly dimmer white/grey for feedback */
             font-size: 1.1em;
             margin-top: 10px;
+            line-height: 1.5;
         }
 
         footer {
-            margin-top: 40px;
+            margin-top: 50px;
             font-size: 0.9em;
-            color: #888; /* Muted color for footer */
+            color: #555; /* Muted color for footer */
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Rate My Ride!</h1>
+        <h1>SKILL_RATER.EXE</h1>
 
         <select id="discipline">
             <option value="skateboard">Skateboard</option>
@@ -201,26 +173,18 @@
             <option value="rollerblades">Rollerblades</option>
         </select>
 
-        <textarea id="tricksInput" placeholder="e.g., Ollie, Kickflip, 50-50 Grind, Tailwhip, Soul Grind... or just 'I can barely stand up!'"></textarea>
+        <textarea id="tricksInput" placeholder="Describe your skills... e.g., Ollie, Kickflip, Tailwhip, Soul Grind, or 'Just cruising...'"></textarea>
 
-        <button id="evaluateButton">Rate My Skills!</button>
+        <button id="evaluateButton">EVALUATE_SKILL</button>
 
         <div id="loadingAnimation" class="hidden">
-            <div class="ramp-floor"></div>
-            <div class="ramp-left-visual"></div>
-            <div class="ramp-right-visual"></div>
-            <div id="skateIconContainer">
-                <!-- Simple SVG Skateboard -->
-                <svg id="skateIconSvg" viewBox="0 0 100 35" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="10" y="12" width="80" height="10" rx="3" ry="3"/>
-                    <circle cx="25" cy="27" r="7"/>
-                    <circle cx="75" cy="27" r="7"/>
-                </svg>
-            </div>
+            <div class="loading-square outer"></div>
+            <div class="loading-square middle"></div>
+            <div class="loading-square inner"></div>
         </div>
 
         <div id="result" class="hidden">
-            <h2>Your Score: <span id="scoreValue">--</span></h2>
+            <h2>Final Assessment: <span id="scoreValue">--</span></h2>
             <p id="feedbackMessage"></p>
         </div>
     </div>
@@ -232,7 +196,7 @@
         const tricksInput = document.getElementById('tricksInput');
         const evaluateButton = document.getElementById('evaluateButton');
         const loadingAnimation = document.getElementById('loadingAnimation');
-        const skateIconContainer = document.getElementById('skateIconContainer');
+        // const skateIconContainer = document.getElementById('skateIconContainer'); // No longer used
         const resultDiv = document.getElementById('result');
         const scoreValueSpan = document.getElementById('scoreValue');
         const feedbackMessageP = document.getElementById('feedbackMessage');
@@ -243,7 +207,7 @@
 
             resultDiv.classList.add('hidden');
             loadingAnimation.classList.remove('hidden');
-            skateIconContainer.classList.add('animate');
+            // skateIconContainer.classList.add('animate'); // No longer used
 
             // Simulate AI evaluation time
             setTimeout(() => {
@@ -252,7 +216,7 @@
                 feedbackMessageP.textContent = getFeedbackMessage(parseFloat(score));
 
                 loadingAnimation.classList.add('hidden');
-                skateIconContainer.classList.remove('animate');
+                // skateIconContainer.classList.remove('animate'); // No longer used
                 resultDiv.classList.remove('hidden');
             }, 3000); // 3 seconds for animation
         });
@@ -260,7 +224,6 @@
         function calculateScore(tricksText, discipline) {
             tricksText = tricksText.toLowerCase();
 
-            // Handle absolute beginners or empty input
             if (tricksText.match(/\b(no|none|never|can't|cannot|nothing|haven't|zero|beginner|barely stand|just starting)\b/i) || tricksText.trim().length < 5) {
                  if (tricksText.includes("ollie") || tricksText.includes("ride") || tricksText.includes("roll") || tricksText.includes("push")) return "0.5";
                 return "0.0";
@@ -270,7 +233,7 @@
                 // Basic (0.1 - 2.0 points)
                 'roll': 0.1, 'ride':0.1, 'balance': 0.2, 'tic-tac': 0.3, 'push': 0.1, 'stop': 0.1,'turn': 0.2,
                 'manual': 0.8, 'nose manual': 0.9, 'g-turn':0.7, 'pivot': 0.6, 'drop in': 0.7, 'kickturn': 0.4, 'pump': 0.3,
-                'ollie': 1.5, 'bunny hop': 1.5, // For scooter/blade
+                'ollie': 1.5, 'bunny hop': 1.5,
                 
                 // Beginner-Intermediate (2.0 - 4.0 points)
                 'shuvit': 1.0, 'shove-it': 1.0, 'pop shuvit': 1.5, 'pop shove-it':1.5, '180 ollie': 1.8, 'fs 180': 1.8, 'bs 180': 1.8, 'half cab': 1.7,
@@ -297,7 +260,7 @@
                 // Pro / Exceptional (8.5 - 10.0 points)
                 '900': 7.0, '1080': 8.0, '1260': 9.0, 'mctwist': 6.0, 'kickflip mctwist': 8.0,
                 'christ air': 5.0, 'elguerial': 6.5, 'caballerial': 4.5, 'varial mctwist': 7.0,
-                'tony hawk': 6.0, // Mentioning the name itself as a skill reference
+                'tony hawk': 6.0, // Still has a value if someone types it, but no special score override
 
                 // Scooter specific
                 'tailwhip': 3.0, 'double whip': 4.0, 'barspin': 2.0, 'flair': 4.0, 'buttercup': 2.5, 'bri flip': 3.5, 'fingerwhip': 2.2, 'scooter flip': 3.0,
@@ -308,87 +271,61 @@
             let currentRawScore = 0;
             const foundTricks = new Set();
 
-            // Check for "flip in" / "flip out" to apply as multipliers later
             let hasFlipIn = /\bflip in\b/.test(tricksText);
             let hasFlipOut = /\bflip out\b/.test(tricksText);
 
             for (const trick in trickValues) {
-                // Regex to match whole words or hyphenated terms, case insensitive
-                const regex = new RegExp(`\\b${trick.replace(/\s/g, '[\\s-]?')}\\b`, 'gi'); 
+                const regex = new RegExp(`\\b${trick.replace(/\s/g, '[\\s-]?')}\\b`, 'gi');
                 if (regex.test(tricksText)) {
                     currentRawScore += trickValues[trick];
                     foundTricks.add(trick);
                 }
             }
             
-            // Add bonus for flip in/out if grinds/slides are mentioned
             if ((hasFlipIn || hasFlipOut) && (foundTricks.has('50-50 grind') || foundTricks.has('boardslide') || foundTricks.has('lipslide') || foundTricks.has('nosegrind'))) {
                  currentRawScore += (hasFlipIn ? 1.5 : 0) + (hasFlipOut ? 1.5 : 0);
             }
 
-
-            // Bonus for quantity of unique tricks
             if (foundTricks.size > 3) currentRawScore += (foundTricks.size - 3) * 0.1;
             if (foundTricks.size > 7) currentRawScore += (foundTricks.size - 7) * 0.2;
             if (foundTricks.size > 12) currentRawScore += (foundTricks.size - 12) * 0.3;
             if (foundTricks.size > 18) currentRawScore += (foundTricks.size - 18) * 0.4;
 
-
             let finalScore;
             
-            // Special handling for "Tony Hawk" or his signature tricks
-            const isTonyHawkLevel = foundTricks.has('tony hawk') || foundTricks.has('900') || foundTricks.has('mctwist') || foundTricks.has('1080');
-
-            if (isTonyHawkLevel && foundTricks.size >=2) { // TH or signature tricks + at least one other trick
-                finalScore = 8.7 + (currentRawScore / 40); // Base of 8.7, raw score of 20 gives ~9.2
-                finalScore = Math.min(finalScore, 9.5); // Cap for TH level
-                if (foundTricks.has('tony hawk') && foundTricks.size < 4 && !foundTricks.has('900')) { // Just "Tony Hawk" and few others
-                    finalScore = 9.0;
-                }
-            } else {
-                // General scaling: map raw score to 0-10.
-                // Max raw score for a "normal pro" might be around 30-40. Exceptional might be 50+.
-                if (currentRawScore < 1)       finalScore = currentRawScore * 2.0; // Max 2.0 for raw score < 1 (e.g. ollie = 1.5 -> 3.0 scaled is too high)
-                                                // Let's adjust this part to be more granular at low end
-                else if (currentRawScore < 0.5) finalScore = currentRawScore * 1.0; // e.g. "roll" = 0.1
-                else if (currentRawScore < 2.0) finalScore = 0.5 + (currentRawScore - 0.5) * 1.0; // ollie (1.5) = 0.5 + 1*1 = 1.5
-                else if (currentRawScore < 5)   finalScore = 1.5 + (currentRawScore - 2.0) * 0.8; // kickflip (2.5) + ollie(1.5)=4 -> 1.5 + 2*0.8 = 3.1
-                else if (currentRawScore < 10)  finalScore = 3.9 + (currentRawScore - 5.0) * 0.5; // Several intermediate tricks
-                else if (currentRawScore < 20)  finalScore = 6.4 + (currentRawScore - 10.0) * 0.20; // Advanced tricks
-                else if (currentRawScore < 30)  finalScore = 8.4 + (currentRawScore - 20.0) * 0.08; // Getting close to pro
-                else if (currentRawScore < 45)  finalScore = 9.2 + (currentRawScore - 30.0) * 0.04; // Pro level
-                else                            finalScore = 9.8 + (currentRawScore - 45.0) * 0.02; // Legendary
-            }
+            // General scaling: map raw score to 0-10.
+            // This scaling logic now applies to all inputs without special overrides.
+            if (currentRawScore < 0.5)      finalScore = currentRawScore * 1.0;
+            else if (currentRawScore < 2.0) finalScore = 0.5 + (currentRawScore - 0.5) * 1.0; 
+            else if (currentRawScore < 5)   finalScore = 1.5 + (currentRawScore - 2.0) * 0.8; 
+            else if (currentRawScore < 10)  finalScore = 3.9 + (currentRawScore - 5.0) * 0.5; 
+            else if (currentRawScore < 20)  finalScore = 6.4 + (currentRawScore - 10.0) * 0.20;
+            else if (currentRawScore < 30)  finalScore = 8.4 + (currentRawScore - 20.0) * 0.08; 
+            else if (currentRawScore < 45)  finalScore = 9.2 + (currentRawScore - 30.0) * 0.04; 
+            else                            finalScore = 9.8 + (currentRawScore - 45.0) * 0.02;
             
             finalScore = Math.min(10.0, Math.max(0.0, finalScore));
 
-            // If they only list "Tony Hawk" or "900" with nothing else specific.
-            if (tricksText.trim() === "tony hawk" || (tricksText.includes("tony hawk") && foundTricks.size <= 1 )) finalScore = 9.0;
-            if (tricksText.trim() === "900" || (tricksText.includes("900") && foundTricks.size <=1)) finalScore = 9.0;
-
-
-            // Final check for very low scores if something was actually listed
             if (finalScore < 0.5 && foundTricks.size > 0 && !tricksText.match(/\b(no|none|never|can't|cannot|nothing|haven't|zero|beginner|barely stand|just starting)\b/i)) {
-                 finalScore = 0.5; // Give at least 0.5 if they listed *any* recognizable trick.
+                 finalScore = 0.5; 
             }
-
 
             return finalScore.toFixed(1);
         }
 
         function getFeedbackMessage(score) {
-            if (score <= 0.0) return "Looks like you're just getting started, or maybe today's not your day! Keep at it!";
-            if (score <= 1.0) return "You're on the board! Focus on those fundamentals, every pro started here.";
-            if (score <= 2.5) return "Getting comfortable! You've got the basics down. Time to add some flair!";
-            if (score <= 4.0) return "Solid! You're definitely rolling with confidence. What's next on your trick list?";
-            if (score <= 5.5) return "Nice! You're linking tricks and starting to look smooth. Keep pushing!";
-            if (score <= 7.0) return "Impressive! You've got a good bag of tricks and probably turn heads at the park.";
-            if (score <= 8.5) return "Seriously skilled! You're shredding with style and consistency. True park rat!";
-            if (score < 9.0) return "Whoa, are you sponsored yet? Your skills are top-tier!";
-            if (score === 9.0) return "Is that you, Tony?! Legendary status confirmed!";
-            if (score <= 9.5) return "You're operating on a whole other level. Absolutely phenomenal!";
-            if (score <= 10.0) return "GOAT! You're pushing the boundaries of what's possible. We're not worthy!";
-            return "Something's off, try again!";
+            if (score <= 0.0) return "SYS_INIT: No skill data detected. Engage beginner protocols.";
+            if (score <= 1.0) return "INPUT: Basic motor functions engaged. Establishing baseline connection to board/wheels.";
+            if (score <= 2.5) return "ANALYSIS: Core maneuvers online. Recommend expanding trick_database.dll.";
+            if (score <= 4.0) return "STATUS: Proficiency detected. User exhibiting controlled navigation and elementary stunts.";
+            if (score <= 5.5) return "ASSESSMENT: Intermediate skill-set confirmed. Flow and combination potential increasing.";
+            if (score <= 7.0) return "EVALUATION: Advanced routines processing. User is a significant presence in local node (skatepark).";
+            if (score <= 8.5) return "WARNING: High skill threshold surpassed. User may be operating beyond standard human parameters. Sponsored_content.exe loading?";
+            if (score < 9.0) return "CRITICAL: Elite skill level. Connection to 'The Mainframe' (pro circuit) likely.";
+            if (score === 9.0) return "LEGENDARY_USER.SYS LOADED. Are you a digital ghost in the machine, or just that good?"; // Modified slightly
+            if (score <= 9.5) return "TRANSCENDENCE_PROTOCOL: Skill levels are off the charts. You redefine the physics engine.";
+            if (score <= 10.0) return "SYSTEM_OVERLOAD: // G.O.A.T_DETECTED // You are the architect of this reality. All hail!";
+            return "ERR: Parsing_failed. Resubmit_data_packet.";
         }
 
     </script>
