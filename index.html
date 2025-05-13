@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKILL_RATER.EXE v2.0</title>
+    <title>SKATER_RATER.exe</title> <!-- Version bump -->
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,7 +26,7 @@
             border-radius: 8px;
             border: 1px solid #9D00FF;
             box-shadow: 0 0 15px rgba(157, 0, 255, 0.3), 0 0 25px rgba(157, 0, 255, 0.2);
-            max-width: 700px; /* Slightly wider for more text */
+            max-width: 700px;
             width: 90%;
         }
         h1 {
@@ -55,7 +55,7 @@
             box-sizing: border-box;
         }
         textarea {
-            height: 150px; /* More space for detailed input */
+            height: 150px;
             resize: vertical;
         }
         button {
@@ -87,7 +87,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>SKILL_RATER.EXE v2.0</h1>
+        <h1>SKILL_RATER.EXE v2.1</h1>
         <select id="discipline">
             <option value="skateboard">Skateboard</option>
             <option value="scooter">Scooter</option>
@@ -121,8 +121,6 @@
         const feedbackMessageP = document.getElementById('feedbackMessage');
         const debugPanel = document.getElementById('debugPanel');
 
-        // Expanded trick list with scores and applicable disciplines
-        // Scores are base values, consistency and combos will modify them.
         const TRICK_DEFINITIONS = [
             // General Basics
             { name: "roll", score: 0.1, type: "basic" }, { name: "ride", score: 0.1, type: "basic" },
@@ -130,8 +128,7 @@
             { name: "stop", score: 0.1, type: "basic" }, { name: "turn", score: 0.2, type: "basic" },
             { name: "pump", score: 0.3, type: "basic" }, { name: "kickturn", score: 0.4, type: "basic" },
             { name: "tic-tac", score: 0.3, type: "basic" }, { name: "drop in", score: 0.7, type: "ramp" },
-
-            // Skateboard Specific (selected examples, can be greatly expanded)
+            // Skateboard Specific
             { name: "ollie", score: 1.5, disciplines: ["skateboard"], type: "flat" },
             { name: "nollie", score: 1.8, disciplines: ["skateboard"], type: "flat" },
             { name: "switch ollie", score: 2.0, disciplines: ["skateboard"], type: "flat" },
@@ -165,7 +162,6 @@
             { name: "540", score: 4.0, type: "air" }, { name: "720", score: 5.5, type: "air" },
             { name: "900", score: 7.0, type: "air" }, { name: "1080", score: 8.0, type: "air" },
             { name: "mctwist", score: 6.0, type: "air" },
-
             // Scooter Specific
             { name: "bunny hop", score: 1.2, disciplines: ["scooter", "bmx"], type: "flat" },
             { name: "tailwhip", score: 3.0, disciplines: ["scooter"], type: "flat" },
@@ -181,8 +177,7 @@
             { name: "decade", score: 3.3, disciplines: ["scooter"], type: "flat" },
             { name: "unwind", score: 2.8, disciplines: ["scooter"], type: "flat" },
             { name: "fakie tailwhip", score: 3.5, disciplines: ["scooter"], type: "flat" },
-
-            // Rollerblade Specific (Aggressive Inline)
+            // Rollerblade Specific
             { name: "soul grind", score: 2.5, disciplines: ["rollerblades"], type: "grind" },
             { name: "makio grind", score: 2.2, disciplines: ["rollerblades"], type: "grind" },
             { name: "mizou grind", score: 2.6, disciplines: ["rollerblades"], type: "grind" }, { name: "mizou", score: 2.6, type: "grind" },
@@ -197,12 +192,12 @@
             { name: "backslide grind", score: 2.8, disciplines: ["rollerblades"], type: "grind" }, { name: "backslide", score: 2.8, type: "grind" },
             { name: "torque grind", score: 3.3, disciplines: ["rollerblades"], type: "grind" },
             { name: "UFO grind", score: 3.1, disciplines: ["rollerblades"], type: "grind" },
-            { name: "bio", score: 4.0, disciplines: ["rollerblades"], type: "air" }, // Typically a 540 grab
+            { name: "bio", score: 4.0, disciplines: ["rollerblades"], type: "air" },
             { name: "misty flip", score: 4.5, disciplines: ["rollerblades"], type: "air" },
             { name: "flatspin 540", score: 4.2, disciplines: ["rollerblades"], type: "air" },
             { name: "cork 720", score: 5.8, disciplines: ["rollerblades"], type: "air" },
             { name: "cess slide", score: 1.5, disciplines: ["rollerblades"], type: "slide" },
-        ].sort((a, b) => b.name.length - a.name.length); // Sort by name length, longest first
+        ].sort((a, b) => b.name.length - a.name.length);
 
         const CONSISTENCY_MODIFIERS = {
             "consistently": 1.0, "always": 1.0, "every time": 1.0, "nailed": 1.0, "solid": 0.95, "cleanly":0.95,
@@ -214,9 +209,7 @@
         };
 
         const COMBO_CONNECTORS = ["into", "to", "then", "and then", "followed by", "onto"];
-        const STANCE_KEYWORDS = {
-            "switch": 1.2, "nollie": 1.15, "fakie": 1.1
-        };
+        const STANCE_KEYWORDS = { "switch": 1.2, "nollie": 1.15, "fakie": 1.1 };
         const INTENSITY_KEYWORDS = {
             "big": 0.3, "high": 0.3, "long": 0.2, "huge": 0.5, "massive": 0.5,
             "small": -0.1, "low": -0.1, "short": -0.1, "little": -0.1
@@ -225,21 +218,17 @@
         evaluateButton.addEventListener('click', () => {
             const tricksText = tricksInput.value;
             const discipline = disciplineSelect.value;
-
             resultDiv.classList.add('hidden');
             if (DEBUG_MODE) debugPanel.classList.add('hidden');
             loadingAnimation.classList.remove('hidden');
-
             setTimeout(() => {
                 const { score, debugLog } = calculateScore(tricksText, discipline);
                 scoreValueSpan.textContent = score;
                 feedbackMessageP.textContent = getFeedbackMessage(parseFloat(score));
-
                 if (DEBUG_MODE) {
                     debugPanel.textContent = debugLog.join('\n');
                     debugPanel.classList.remove('hidden');
                 }
-
                 loadingAnimation.classList.add('hidden');
                 resultDiv.classList.remove('hidden');
             }, 3000);
@@ -247,31 +236,22 @@
 
         function calculateScore(text, currentDiscipline) {
             let rawScore = 0;
-            const foundTricks = []; // Stores { trick, score, index, consistencyApplied: bool }
+            const foundTricks = [];
             let debugLog = [];
             debugLog.push(`INPUT: "${text}" | DISCIPLINE: ${currentDiscipline}`);
-
             let processedText = text.toLowerCase();
-
-            // --- Step 1: Identify all trick mentions and their initial scores ---
-            // Split text into potential trick phrases (e.g., by comma, period, "and")
-            // This helps isolate modifiers to specific tricks more accurately.
-            // A simpler approach: scan for tricks, then look around them.
-            
             let searchIndex = 0;
+
             while(searchIndex < processedText.length) {
                 let bestMatch = null;
                 for (const trickDef of TRICK_DEFINITIONS) {
-                    // Check discipline compatibility
                     if (trickDef.disciplines && !trickDef.disciplines.includes(currentDiscipline) && !trickDef.disciplines.includes("general")) {
                         continue;
                     }
                     const trickRegex = new RegExp(`\\b${trickDef.name.replace(/[-\s]/g, '[-\\s]?')}\\b`, 'gi');
-                    trickRegex.lastIndex = searchIndex; // Start search from current searchIndex
+                    trickRegex.lastIndex = searchIndex;
                     const match = trickRegex.exec(processedText);
-
                     if (match && (bestMatch === null || match.index < bestMatch.index || (match.index === bestMatch.index && trickDef.name.length > bestMatch.trick.name.length ))) {
-                         // Prioritize matches that start earlier, or longer matches at same position
                         bestMatch = { trick: trickDef, index: match.index, end_index: match.index + match[0].length, text: match[0] };
                     }
                 }
@@ -282,9 +262,6 @@
                     let consistencyApplied = false;
                     let stanceMultiplier = 1.0;
                     let intensityBonus = 0;
-
-                    // --- Step 1a: Check for Consistency Modifiers around the trick ---
-                    // Look in a window around the trick (e.g., 30 chars before, 15 after)
                     const windowSizeBefore = 40;
                     const windowSizeAfter = 25;
                     const preText = processedText.substring(Math.max(0, bestMatch.index - windowSizeBefore), bestMatch.index);
@@ -296,13 +273,11 @@
                             consistencyMultiplier = CONSISTENCY_MODIFIERS[phrase];
                             consistencyApplied = true;
                             debugLog.push(`  Found consistency: "${phrase}" (x${consistencyMultiplier}) for "${bestMatch.trick.name}"`);
-                            break; // Apply first one found
+                            break;
                         }
                     }
                     trickScore *= consistencyMultiplier;
 
-                    // --- Step 1b: Check for Stance (if not already part of trick name) ---
-                    // Example: "switch ollie" is specific. "ollie switch" or "ollie in switch"
                     if (!bestMatch.trick.name.match(/\b(switch|nollie|fakie)\b/)) {
                         for (const stance in STANCE_KEYWORDS) {
                             if (new RegExp(`\\b${stance}\\s*${bestMatch.text}\\b`).test(processedText.substring(Math.max(0, bestMatch.index - stance.length - 2), bestMatch.end_index)) ||
@@ -315,63 +290,48 @@
                         }
                     }
                     
-                    // --- Step 1c: Check for Intensity/Obstacle Modifiers ---
                     const obstacleRegex = /(\d+)\s*(?:stair|set|foot|feet)/g;
                     let obsMatch;
-                    // Check specifically around the trick for obstacle numbers
                     const obstacleContext = processedText.substring(Math.max(0, bestMatch.index - 15), Math.min(processedText.length, bestMatch.end_index + 15));
                     while((obsMatch = obstacleRegex.exec(obstacleContext)) !== null){
                         const num = parseInt(obsMatch[1]);
                         if(num > 0){
-                            let obstacleBonus = num * 0.15; // 0.15 per stair/foot
-                            if (obsMatch[0].includes("rail")) obstacleBonus *= 1.2; // Rails slightly harder
+                            let obstacleBonus = num * 0.15;
+                            if (obsMatch[0].includes("rail")) obstacleBonus *= 1.2;
                             trickScore += obstacleBonus;
                             intensityBonus += obstacleBonus;
                             debugLog.push(`  Obstacle bonus: ${num} ${obsMatch[2] || 'units'} (+${obstacleBonus.toFixed(2)}) for "${bestMatch.trick.name}"`);
                         }
                     }
-
                     for (const keyword in INTENSITY_KEYWORDS) {
                         if (new RegExp(`\\b${keyword}\\s*${bestMatch.text}\\b`).test(contextText) ||
                             new RegExp(`\\b${bestMatch.text}\\s*${keyword}\\b`).test(contextText)) {
                              let keywordBonus = INTENSITY_KEYWORDS[keyword];
-                             // Apply only if relevant to trick type (e.g. 'high' for airs/ollies, 'long' for manuals/grinds)
                              if ((bestMatch.trick.type === 'air' || bestMatch.trick.type === 'flat' || bestMatch.trick.type === 'ramp') && (keyword === 'high' || keyword === 'big')) {
                                 trickScore += keywordBonus; intensityBonus += keywordBonus;
                              } else if ((bestMatch.trick.type === 'balance' || bestMatch.trick.type === 'grind' || bestMatch.trick.type === 'slide') && (keyword === 'long' || keyword === 'big')) {
                                 trickScore += keywordBonus; intensityBonus += keywordBonus;
                              }
                             if(intensityBonus > 0 || keywordBonus < 0) debugLog.push(`  Intensity keyword: "${keyword}" (+${keywordBonus}) for "${bestMatch.trick.name}"`);
-                            break; // Simple: take first found intensity keyword
+                            break;
                         }
                     }
-
-
                     foundTricks.push({
-                        name: bestMatch.trick.name,
-                        originalName: bestMatch.text, // The text matched
-                        baseScore: bestMatch.trick.score,
-                        score: Math.max(0.05, trickScore), // Ensure trick has some value if found
-                        index: bestMatch.index,
-                        end_index: bestMatch.end_index,
-                        consistencyApplied: consistencyApplied,
-                        stanceMultiplier: stanceMultiplier,
-                        intensityBonus: intensityBonus,
-                        type: bestMatch.trick.type
+                        name: bestMatch.trick.name, originalName: bestMatch.text, baseScore: bestMatch.trick.score,
+                        score: Math.max(0.05, trickScore), index: bestMatch.index, end_index: bestMatch.end_index,
+                        consistencyApplied: consistencyApplied, stanceMultiplier: stanceMultiplier, intensityBonus: intensityBonus, type: bestMatch.trick.type
                     });
-                    searchIndex = bestMatch.end_index; // Continue search after this trick
+                    searchIndex = bestMatch.end_index;
                 } else {
-                    searchIndex++; // No more tricks found or advance char by char
+                    searchIndex++;
                 }
-                 if (searchIndex > processedText.length + 5) break; // Safety break
+                 if (searchIndex > processedText.length + 5) break;
             }
 
-            // Sort found tricks by their appearance order in the text
             foundTricks.sort((a, b) => a.index - b.index);
             debugLog.push("--- Found Tricks (Pre-Combo): ---");
             foundTricks.forEach(t => debugLog.push(`  ${t.name} (Base: ${t.baseScore.toFixed(2)}, Modified: ${t.score.toFixed(2)}) at index ${t.index}. Stance x${t.stanceMultiplier.toFixed(2)}, Intensity +${t.intensityBonus.toFixed(2)}`));
 
-            // --- Step 2: Calculate Combo Bonuses ---
             let comboBonusScore = 0;
             const uniqueTrickNames = new Set();
             let actualTrickScoreSum = 0;
@@ -386,13 +346,16 @@
                     const textBetween = processedText.substring(trickA.end_index, trickB.index).trim();
 
                     for (const connector of COMBO_CONNECTORS) {
-                        if (new RegExp(`^${connector}\\b`, 'i').test(textBetween) || (textBetween.length < 10 && new RegExp(`\\b${connector}\\b`, 'i').test(textBetween))) { // Connector at start of textBetween, or if textBetween is short
-                            // Basic combo bonus: 20% of the sum of the two trick scores
-                            const comboBonus = (trickA.score + trickB.score) * 0.20;
-                            comboBonusScore += comboBonus;
-                            debugLog.push(`  COMBO: "${trickA.name}" ${connector} "${trickB.name}" (+${comboBonus.toFixed(2)})`);
-                            // Prevent trickB from starting another combo with trickA's connector if textBetween is very short (e.g. "ollie to manual to grind")
-                            // This simplistic approach might need refinement for multi-part combos.
+                        if (new RegExp(`^${connector}\\b`, 'i').test(textBetween) || (textBetween.length < 10 && new RegExp(`\\b${connector}\\b`, 'i').test(textBetween))) {
+                            let comboSpecificConsistency = 1.0;
+                            if (trickA.baseScore > 0 && (trickA.score / trickA.baseScore) < 0.7) { 
+                               comboSpecificConsistency = (trickA.score / trickA.baseScore); 
+                            }
+                            
+                            const comboValue = (trickA.score + trickB.score) * 0.20; 
+                            const finalComboBonus = comboValue * comboSpecificConsistency;
+                            comboBonusScore += finalComboBonus;
+                            debugLog.push(`  COMBO: "${trickA.name}" ${connector} "${trickB.name}" -> BaseValue(A):${trickA.score.toFixed(2)}, BaseValue(B):${trickB.score.toFixed(2)}, Bonus: +${finalComboBonus.toFixed(2)})${comboSpecificConsistency < 1.0 ? ` (overall combo consistency x${comboSpecificConsistency.toFixed(2)})` : ''}`);
                             break; 
                         }
                     }
@@ -402,7 +365,6 @@
             debugLog.push(`Total trick score sum: ${actualTrickScoreSum.toFixed(2)}`);
             debugLog.push(`Total combo bonus: ${comboBonusScore.toFixed(2)}`);
 
-            // --- Step 3: Bonus for Variety (Number of Unique Tricks) ---
             let varietyBonus = 0;
             const numUniqueTricks = uniqueTrickNames.size;
             if (numUniqueTricks > 3)  varietyBonus += (Math.min(numUniqueTricks, 7) - 3) * 0.1;
@@ -412,30 +374,31 @@
             rawScore += varietyBonus;
             debugLog.push(`Variety bonus for ${numUniqueTricks} unique tricks: +${varietyBonus.toFixed(2)}`);
 
-
-            // --- Step 4: Handle Edge Cases (Beginner, etc.) ---
             if (text.match(/\b(no|none|never|can't|cannot|nothing|haven't|zero|beginner|barely stand|just starting)\b/i) && numUniqueTricks < 2) {
                 if (text.includes("ollie") || text.includes("ride") || text.includes("roll") || text.includes("push")) return {score: "0.5", debugLog};
                 return {score: "0.0", debugLog};
             }
-            if (rawScore < 0.1 && numUniqueTricks > 0) rawScore = 0.1; // Min score if any trick is detected
+            if (rawScore < 0.1 && numUniqueTricks > 0) rawScore = 0.1;
             debugLog.push(`Raw score before scaling: ${rawScore.toFixed(2)}`);
 
-            // --- Step 5: Final Scaling to 0.0 - 10.0 ---
-            // This scaling needs to be tuned based on expected raw scores from pros
             let finalScore;
-            if (rawScore < 0.5)      finalScore = rawScore * 0.8;
-            else if (rawScore < 2.0) finalScore = 0.4 + (rawScore - 0.5) * 0.7;     // Ollie ~1.5 -> 0.4 + 1*0.7 = 1.1
-            else if (rawScore < 5.0) finalScore = 1.1 + (rawScore - 2.0) * 0.6;     // Kickflip ~2.5 -> 1.1 + 0.5*0.6 = 1.4
-            else if (rawScore < 10.0)finalScore = 2.9 + (rawScore - 5.0) * 0.4;     // Several basic tricks
-            else if (rawScore < 20.0)finalScore = 4.9 + (rawScore - 10.0) * 0.22;   // Intermediate
-            else if (rawScore < 35.0)finalScore = 7.1 + (rawScore - 20.0) * 0.09;   // Advanced (raw 35 -> 7.1 + 15*0.09 = 7.1+1.35 = 8.45)
-            else if (rawScore < 60.0)finalScore = 8.45 + (rawScore - 35.0) * 0.042; // Pro (raw 60 -> 8.45 + 25*0.042 = 8.45+1.05 = 9.5)
-            else                     finalScore = 9.5 + (rawScore - 60.0) * 0.025; // Elite, aiming for 10.0
-
+            if (rawScore <= 0.1)     finalScore = 0.0;
+            else if (rawScore < 1.0) finalScore = rawScore * 0.7;
+            else if (rawScore < 2.5) finalScore = 0.7 + (rawScore - 1.0) * 0.6;
+            else if (rawScore < 5.0) finalScore = 1.6 + (rawScore - 2.5) * 0.5;
+            else if (rawScore < 8.0) finalScore = 2.85 + (rawScore - 5.0) * 0.45;
+            else if (rawScore < 12.0)finalScore = 4.2 + (rawScore - 8.0) * 0.4;
+            else if (rawScore < 20.0)finalScore = 5.8 + (rawScore - 12.0) * 0.25;
+            else if (rawScore < 35.0)finalScore = 7.8 + (rawScore - 20.0) * 0.09;
+            else if (rawScore < 60.0)finalScore = 9.15 + (rawScore - 35.0) * 0.022;
+            else                     finalScore = 9.7 + (rawScore - 60.0) * 0.015;
+            
             finalScore = Math.min(10.0, Math.max(0.0, finalScore));
+            if (rawScore > 0.0 && finalScore == 0.0 && !(text.match(/\b(no|none|never|can't|cannot|nothing|haven't|zero|beginner|barely stand|just starting)\b/i) && numUniqueTricks < 2) ){
+                finalScore = 0.1; 
+            }
             debugLog.push(`FINAL SCALED SCORE: ${finalScore.toFixed(1)}`);
-
+   
             return {score: finalScore.toFixed(1), debugLog};
         }
                 function getFeedbackMessage(score) {
