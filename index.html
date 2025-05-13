@@ -8,7 +8,6 @@
     <style>
         body {
             font-family: 'Share Tech Mono', monospace;
-            background-color: #0D0D0D;
             color: #EAEAEA;
             margin: 0;
             padding: 20px;
@@ -19,33 +18,55 @@
             min-height: 100vh;
             text-align: center;
             overflow-x: hidden;
+            /* Animated gradient background */
+            background: linear-gradient(-45deg, #9D00FF, #4A0078, #1a0527, #0D0D0D);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
         }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .container {
-            background: rgba(10, 10, 10, 0.8);
+            background: rgba(0, 0, 0, 0.85); /* Darker, more solid */
             padding: 30px 40px;
             border-radius: 8px;
-            border: 1px solid #9D00FF;
-            box-shadow: 0 0 15px rgba(157, 0, 255, 0.3), 0 0 25px rgba(157, 0, 255, 0.2);
+            border: 1px solid #7A00CC; /* Slightly darker purple for container border */
+            box-shadow: 0 0 20px rgba(157, 0, 255, 0.4), /* Enhanced outer glow */
+                        0 0 35px rgba(157, 0, 255, 0.3),
+                        inset 0 0 10px rgba(157, 0, 255, 0.15); /* Subtle inner glow */
             max-width: 700px;
             width: 90%;
         }
+
         h1 {
             font-family: 'Audiowide', cursive;
             font-size: 3.2em;
-            color: #9D00FF;
-            /* text-shadow removed */
             margin-bottom: 35px;
             letter-spacing: 1.5px;
+            /* Gradient text instead of glow */
+            color: transparent;
+            background: linear-gradient(45deg, #C77DFF, #9D00FF 70%);
+            -webkit-background-clip: text;
+            background-clip: text;
         }
+
         h2 {
             font-family: 'Audiowide', cursive;
             font-size: 25px;
-            color: #9D00FF;
-            /* text-shadow removed */
             margin-bottom: 5px;
             letter-spacing: 0.5px;
+            /* Gradient text instead of glow */
+            color: transparent;
+            background: linear-gradient(45deg, #C77DFF, #9D00FF 70%);
+            -webkit-background-clip: text;
+            background-clip: text;
         }
-        select, textarea, button {
+
+        select, textarea {
             width: 100%;
             padding: 12px 15px;
             margin-bottom: 20px;
@@ -56,27 +77,43 @@
             font-family: 'Share Tech Mono', monospace;
             font-size: 1em;
             box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus */
         }
+
+        select:focus, textarea:focus {
+            border-color: #B041FF; /* Brighter purple on focus */
+            box-shadow: 0 0 8px rgba(176, 65, 255, 0.6); /* Glow on focus */
+            outline: none;
+        }
+
         textarea {
             height: 150px;
             resize: vertical;
         }
+
         button {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
             background-color: #9D00FF;
             color: #FFFFFF;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
             border: 1px solid #9D00FF;
+            outline: none; /* Cleaner focus */
         }
-        button:hover { background-color: #B041FF; box-shadow: 0 0 10px #9D00FF; }
+        button:hover { background-color: #B041FF; box-shadow: 0 0 12px #9D00FF, 0 0 5px #C77DFF; }
         button:active { background-color: #7A00CC; }
         .hidden { display: none !important; }
 
-        /* --- Styles for the new loading animation --- */
+        /* --- Styles for the halfpipe loading animation --- */
         #loadingAnimation {
-            width: 100px; /* Adjusted for potentially wider halfpipe visually */
-            height: 70px;  /* Adjusted as the halfpipe might not need to be as tall as the quarterpipe for the same visual effect */
+            width: 100px;
+            height: 50px; /* Adjusted for halfpipe shape */
             margin: 30px auto;
             position: relative;
         }
@@ -86,7 +123,7 @@
             height: 100%;
         }
 
-        .halfpipe-ramp { /* Renamed from quarterpipe-ramp */
+        .halfpipe-ramp-visual { /* Style for the visible ramp line */
             stroke: #4A0078;
             stroke-width: 6;
             stroke-linecap: round;
@@ -94,11 +131,11 @@
         }
 
         #skateboard {
-            /* Path: M(start) C(control1) (control2) (intermediate) C(control3) (control4) (end) */
-            /* This path goes from bottom-left, up, then down to bottom-right */
-            offset-path: path("M10,55 C10,20 30,5 50,5 C70,5 90,20 90,55"); /* Adjusted for new viewBox and smoother halfpipe */
-            offset-rotate: auto;
-            animation: skateAcrossHalfpipe 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+            /* Path: M(left-lip) Q(control-for-bottom-curve) (right-lip) */
+            /* This creates a U-shape opening upwards */
+            offset-path: path("M15,40 Q50,5 85,40");
+            offset-rotate: auto; /* Rotates the skateboard along the path */
+            animation: skateAcrossHalfpipe 2.5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; /* Alternate for back and forth */
         }
 
         .board-deck {
@@ -111,33 +148,39 @@
             fill: #2A2A2A;
         }
 
-        @keyframes skateAcrossHalfpipe { /* Renamed animation */
+        /* Simpler keyframes, relying on 'alternate' and 'offset-rotate: auto' */
+        @keyframes skateAcrossHalfpipe {
             0% {
                 offset-distance: 0%;
-                transform: rotate(0deg); /* Start flat or slightly angled if needed */
-            }
-            25% {
-                 transform: rotate(-30deg); /* Angle up the left side */
-            }
-            50% {
-                offset-distance: 100%;
-                transform: rotate(0deg); /* Flat at the other end before turning */
-            }
-            75% {
-                transform: rotate(30deg); /* Angle up the right side (when returning) */
             }
             100% {
-                offset-distance: 0%;
-                transform: rotate(0deg); /* Back to start */
+                offset-distance: 100%;
             }
         }
-        /* --- End of new loading animation styles --- */
+        /* --- End of loading animation styles --- */
 
         #result { margin-top: 25px; }
-        #result h2 { color: #C77DFF; font-size: 1.6em; }
-        #scoreValue { color: #9D00FF; font-weight: bold; font-size: 1.8em; }
-        #feedbackMessage { color: #B0B0B0; font-size: 1.1em; margin-top: 10px; line-height: 1.5; }
-        footer { margin-top: 50px; font-size: 0.9em; color: #555; letter-spacing: 1px; }
+        #result h2 { /* Result H2 can keep a simpler, direct color */
+            color: #C77DFF;
+            font-size: 1.6em;
+            background: none; /* Override gradient for this specific h2 */
+        }
+        #scoreValue {
+            color: #F0F0F0; /* Bright, almost white */
+            font-weight: bold;
+            font-size: 2em; /* Slightly larger score */
+            display: inline-block; /* For animation if any */
+            /* Pulsing glow for score */
+            animation: pulseScore 1.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseScore {
+            from { text-shadow: 0 0 4px #B041FF, 0 0 8px #B041FF, 0 0 12px #7A00CC; }
+            to   { text-shadow: 0 0 8px #C77DFF, 0 0 15px #9D00FF, 0 0 20px #B041FF; }
+        }
+
+        #feedbackMessage { color: #B8B8B8; font-size: 1.1em; margin-top: 10px; line-height: 1.5; }
+        footer { margin-top: 50px; font-size: 0.9em; color: #666; letter-spacing: 1px; }
         .debug-info { font-size: 0.8em; color: #777; text-align: left; white-space: pre-wrap; max-height: 200px; overflow-y: auto; border: 1px dashed #444; padding: 10px; margin-top:15px;}
     </style>
 </head>
@@ -154,27 +197,18 @@
         <button id="evaluateButton">EVALUATE_SKILL</button>
 
         <div id="loadingAnimation" class="hidden">
-            <!-- Adjusted viewBox for the halfpipe, making it wider and potentially less tall -->
-            <svg viewBox="0 0 100 60" class="skate-animation-svg">
+            <svg viewBox="0 0 100 50" class="skate-animation-svg"> <!-- Adjusted viewBox -->
                 <defs>
-                    <!-- Defines a halfpipe U-shape:
-                         M10,55 (start bottom-left)
-                         C10,20 (control point 1 for left curve)
-                           30,5  (control point 2 for left curve)
-                           50,5  (top-middle point, end of left curve, start of right curve)
-                         C70,5  (control point 1 for right curve)
-                           90,20 (control point 2 for right curve)
-                           90,55 (end bottom-right)
-                    -->
-                    <path id="halfpipeCurve" d="M10,55 C10,20 30,5 50,5 C70,5 90,20 90,55" />
+                    <!-- Path for a U-shape halfpipe: M(left-lip) Q(control-for-bottom) (right-lip) -->
+                    <!-- Starts at (15,40), curves via control (50,5) (low point) to (85,40) -->
+                    <path id="halfpipeCurvePath" d="M15,40 Q50,5 85,40" />
                 </defs>
 
-                <!-- The visible ramp -->
-                <use href="#halfpipeCurve" class="halfpipe-ramp" />
+                <!-- The visible ramp line uses the defined path -->
+                <use href="#halfpipeCurvePath" class="halfpipe-ramp-visual" />
 
-                <!-- The skateboard group, will animate along #halfpipeCurve -->
+                <!-- The skateboard group, animates along the same path -->
                 <g id="skateboard">
-                    <!-- Skateboard components are relative to the group's animated position -->
                     <circle class="board-wheel" cx="-8" cy="-3" r="3" />
                     <circle class="board-wheel" cx="8" cy="-3" r="3" />
                     <rect class="board-deck" x="-14" y="-11" width="28" height="4" rx="1" ry="1" />
@@ -492,8 +526,8 @@
             if (score <= 7.0) return "Impressive! You've got a nice set of tricks and probably turn heads at the park.";
             if (score <= 8.5) return "Seriously skilled! You're shredding with style and consistency. True park rat!";
             if (score < 9.0) return "Whoa, are you sponsored yet? Your skills are top-tier!";
-            if (score === 9.0) return "Is that you, Tony?! Legendary status confirmed!"; // This was 9.9 changed to 9.0
-            if (score <= 9.5) return "You're operating on a whole other level. Absolutely phenomenal!"; // This was 9.9 changed to 9.5
+            if (score === 9.0) return "Is that you, Tony?! Legendary status confirmed!";
+            if (score <= 9.5) return "You're operating on a whole other level. Absolutely phenomenal!";
             if (score <= 10.0) return "GOAT! You're pushing the boundaries of what's possible. We're not worthy!";
             return "Something's off, try again!";
         }
