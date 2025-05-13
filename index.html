@@ -3,70 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Poker Prime</title> <!-- Slightly new name for this version -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>Skate Skill Rater</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+        }
+
+        .container {
+            background: rgba(40, 40, 40, 0.85); /* Darker semi-transparent card */
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.5); /* Neon glow */
+            border: 2px solid #00FFFF; /* Cyan border */
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5em;
+            color: #FF00FF; /* Neon Pink */
+            text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF, 0 0 15px #00FFFF, 0 0 20px #00FFFF;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+        }
+
+        select, textarea, button {
+            width: 90%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 2px solid #00FF00; /* Neon Green */
+            background-color: #2a2a2a; /* Darker input fields */
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #FF00FF; /* Neon Pink */
+            color: #1a1a1a; /* Dark text on button */
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #FF00FF;
+        }
+
+        button:hover {
+            background-color: #00FFFF; /* Cyan on hover */
+            border-color: #00FFFF;
+            box-shadow: 0 0 15px #00FFFF;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #loadingAnimation {
+            width: 220px; /* Increased width to accommodate ramps and movement */
+            height: 120px; /* Increased height for animation arc */
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden; /* Keep icon within bounds */
+        }
+
+        .ramp-floor {
+            width: 100%;
+            height: 10px;
+            background-color: #444; /* Darker grey for floor */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 3px;
+        }
+        .ramp-visual {
+            width: 50px; /* Width of the ramp's sloped part */
+            height: 90px; /* Height of the ramp */
+            background: linear-gradient(to top, #666, #888); /* Ramp gradient */
+            position: absolute;
+            bottom: 10px; /* Sits on the floor */
+            border-top: 3px solid #aaa;
+        }
+        .ramp-left-visual {
+            left: 10px; /* Positioned slightly inwards */
+            clip-path: polygon(0 100%, 100% 0, 100% 100%); /* Slanted inwards */
+            border-top-left-radius: 50% 20%;
+            border-top-right-radius: 10%;
+
+        }
+        .ramp-right-visual {
+            right: 10px; /* Positioned slightly inwards */
+            clip-path: polygon(0 0, 100% 100%, 0 100%); /* Slanted inwards */
+            border-top-right-radius: 50% 20%;
+            border-top-left-radius: 10%;
+        }
+
+        #skateIconContainer {
+            width: 40px; /* Skateboard icon size */
+            height: 20px;
+            position: absolute;
+            bottom: 15px; /* Starts on the floor */
+            left: 50%; /* Initial horizontal center */
+            /* transform: translateX(-50%); // Applied in animation */
+        }
+        #skateIconContainer.animate {
+            animation: halfPipeRide 2.5s infinite ease-in-out;
+        }
+        #skateIconSvg {
+            width: 100%;
+            height: 100%;
+            fill: #00FF00; /* Neon Green skateboard */
+        }
+
+        @keyframes halfPipeRide {
+            0% { /* Bottom center */
+                transform: translateX(-50%) translateY(0px) rotate(0deg);
+                left: 50%;
+            }
+            20% { /* Top of left ramp */
+                transform: translateX(0%) translateY(-70px) rotate(-40deg); /* Move origin for rotate */
+                left: 15%; /* Moves towards left edge of animation area */
+            }
+            25% { /* Peak, slightly turning */
+                 transform: translateX(0%) translateY(-75px) rotate(0deg);
+                left: 15%;
+            }
+            40% { /* Bottom center, coming from left */
+                transform: translateX(-50%) translateY(0px) rotate(0deg);
+                left: 50%;
+            }
+            /* Symmetrical for right side */
+            60% { /* Top of right ramp */
+                transform: translateX(-100%) translateY(-70px) rotate(40deg);/* Move origin for rotate */
+                left: 85%; /* Moves towards right edge */
+            }
+             65% { /* Peak, slightly turning */
+                 transform: translateX(-100%) translateY(-75px) rotate(0deg);
+                left: 85%;
+            }
+            80% { /* Bottom center, coming from right */
+                transform: translateX(-50%) translateY(0px) rotate(0deg);
+                left: 50%;
+            }
+            100% { /* Bottom center, end of cycle */
+                transform: translateX(-50%) translateY(0px) rotate(0deg);
+                left: 50%;
+            }
+        }
+
+        #result {
+            margin-top: 25px;
+        }
+        #result h2 {
+            color: #00FFFF; /* Cyan for score heading */
+            font-size: 1.8em;
+        }
+        #scoreValue {
+            color: #00FF00; /* Neon Green for score value */
+            font-weight: bold;
+        }
+        #feedbackMessage {
+            color: #FFA500; /* Bright Orange for feedback */
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #888; /* Muted color for footer */
+        }
+    </style>
 </head>
 <body>
-    <!-- Menu Screen -->
-    <div id="menu-screen" class="screen active">
-        <div class="menu-background"></div>
-        <div class="menu-content">
-            <h1>NEO POKER</h1>
-            <button id="start-game-button">Enter the Grid</button>
-            <div class="menu-options">
-                <label for="opponent-count-slider">Opponents: <span id="opponent-count-display">3</span></label>
-                <input type="range" id="opponent-count-slider" min="1" max="5" value="3">
-                <p>Your Bankroll: $<span id="menu-bankroll-display">1000</span></p>
+    <div class="container">
+        <h1>Rate My Ride!</h1>
+
+        <select id="discipline">
+            <option value="skateboard">Skateboard</option>
+            <option value="scooter">Scooter</option>
+            <option value="rollerblades">Rollerblades</option>
+        </select>
+
+        <textarea id="tricksInput" placeholder="e.g., Ollie, Kickflip, 50-50 Grind, Tailwhip, Soul Grind... or just 'I can barely stand up!'"></textarea>
+
+        <button id="evaluateButton">Rate My Skills!</button>
+
+        <div id="loadingAnimation" class="hidden">
+            <div class="ramp-floor"></div>
+            <div class="ramp-left-visual"></div>
+            <div class="ramp-right-visual"></div>
+            <div id="skateIconContainer">
+                <!-- Simple SVG Skateboard -->
+                <svg id="skateIconSvg" viewBox="0 0 100 35" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="12" width="80" height="10" rx="3" ry="3"/>
+                    <circle cx="25" cy="27" r="7"/>
+                    <circle cx="75" cy="27" r="7"/>
+                </svg>
             </div>
+        </div>
+
+        <div id="result" class="hidden">
+            <h2>Your Score: <span id="scoreValue">--</span></h2>
+            <p id="feedbackMessage"></p>
         </div>
     </div>
 
-    <!-- Game Screen -->
-    <div id="game-screen" class="screen">
-        <div class="poker-table-container"> <!-- Keeps table aspect ratio -->
-            <div class="poker-table"> <!-- The visual felt -->
-                <div class="table-center">
-                    <div id="community-cards-area" class="community-cards-area">
-                        <!-- Cards here -->
-                    </div>
-                    <div id="pot-area" class="pot-area">
-                        Pot: <span id="pot-amount">0</span>
-                    </div>
-                </div>
-                <div id="player-seats-container">
-                    <!-- Player seats generated by JS -->
-                </div>
-            </div>
-        </div>
+    <footer>A Jaron Dembsky Production</footer>
 
-        <!-- UI elements positioned below or overlaying table -->
-        <div class="game-info-column"> <!-- To group player list and log like screenshot -->
-            <div id="player-info-display-area">
-                <!-- Text list of player info, updated by JS -->
-            </div>
-        </div>
+    <script>
+        const disciplineSelect = document.getElementById('discipline');
+        const tricksInput = document.getElementById('tricksInput');
+        const evaluateButton = document.getElementById('evaluateButton');
+        const loadingAnimation = document.getElementById('loadingAnimation');
+        const skateIconContainer = document.getElementById('skateIconContainer');
+        const resultDiv = document.getElementById('result');
+        const scoreValueSpan = document.getElementById('scoreValue');
+        const feedbackMessageP = document.getElementById('feedbackMessage');
 
-        <div id="actions-area" class="actions-area">
-            <button class="action-button" data-action="fold">Fold</button>
-            <button class="action-button" data-action="check">Check</button>
-            <button class="action-button" data-action="call">Call</button>
-            <div class="bet-controls">
-                <input type="range" id="bet-slider-input" min="0" max="1000" value="10" step="1">
-                <input type="number" id="bet-amount-input" min="0" value="10">
-            </div>
-            <button class="action-button" data-action="bet">Bet</button>
-            <button class="action-button" data-action="raise">Raise</button>
-            <button class="action-button all-in-button" data-action="allin">ALL IN</button>
-        </div>
+        evaluateButton.addEventListener('click', () => {
+            const tricksText = tricksInput.value;
+            const discipline = disciplineSelect.value;
 
-        <div id="message-log" class="message-log">
-            Welcome to Neo Poker Prime!
-        </div>
-    </div>
+            resultDiv.classList.add('hidden');
+            loadingAnimation.classList.remove('hidden');
+            skateIconContainer.classList.add('animate');
 
-    <script src="script.js"></script>
+            // Simulate AI evaluation time
+            setTimeout(() => {
+                const score = calculateScore(tricksText, discipline);
+                scoreValueSpan.textContent = score;
+                feedbackMessageP.textContent = getFeedbackMessage(parseFloat(score));
+
+                loadingAnimation.classList.add('hidden');
+                skateIconContainer.classList.remove('animate');
+                resultDiv.classList.remove('hidden');
+            }, 3000); // 3 seconds for animation
+        });
+
+        function calculateScore(tricksText, discipline) {
+            tricksText = tricksText.toLowerCase();
+
+            // Handle absolute beginners or empty input
+            if (tricksText.match(/\b(no|none|never|can't|cannot|nothing|haven't|zero|beginner|barely stand|just starting)\b/i) || tricksText.trim().length < 5) {
+                 if (tricksText.includes("ollie") || tricksText.includes("ride") || tricksText.includes("roll") || tricksText.includes("push")) return "0.5";
+                return "0.0";
+            }
+
+            const trickValues = {
+                // Basic (0.1 - 2.0 points)
+                'roll': 0.1, 'ride':0.1, 'balance': 0.2, 'tic-tac': 0.3, 'push': 0.1, 'stop': 0.1,'turn': 0.2,
+                'manual': 0.8, 'nose manual': 0.9, 'g-turn':0.7, 'pivot': 0.6, 'drop in': 0.7, 'kickturn': 0.4, 'pump': 0.3,
+                'ollie': 1.5, 'bunny hop': 1.5, // For scooter/blade
+                
+                // Beginner-Intermediate (2.0 - 4.0 points)
+                'shuvit': 1.0, 'shove-it': 1.0, 'pop shuvit': 1.5, 'pop shove-it':1.5, '180 ollie': 1.8, 'fs 180': 1.8, 'bs 180': 1.8, 'half cab': 1.7,
+                'boneless': 1.2, 'no comply': 1.2, 'early grab': 1.0, 'chinese nollie': 0.5,
+                'acid drop': 1.5, 'caveman': 1.0,
+                
+                // Intermediate (4.0 - 6.5 points)
+                'kickflip': 2.5, 'heelflip': 2.5, 'varial kickflip': 2.8, 'varial heelflip': 2.8,
+                '50-50 grind': 2.0, '5-0 grind': 2.2, 'nosegrind': 2.4, 'tailgrind': 2.2, 'smith grind': 3.0, 'feeble grind': 3.0,
+                'axel stall': 1.5, 'rock to fakie': 1.5, 'rock and roll': 1.6, 'boardslide': 2.2, 'lipslide': 2.4, 'tailslide': 2.6, 'noseslide': 2.6,
+                'tail stall': 1.5, 'nose stall': 1.5, 'rail stand': 1.0, 'primo':1.5, 'hippie jump': 0.5,
+                'fakie ollie': 1.6, 'nollie': 1.8, 'switch ollie': 2.0,
+                'indy grab': 1.8, 'stalefish grab': 1.8, 'melon grab': 1.7, 'benihana': 2.0, 'airwalk': 2.2,
+
+                // Advanced (6.5 - 8.5 points)
+                '360 shuvit': 2.5, 'bigspin': 2.8, '360 pop shuvit': 3.0, 'gazelle': 3.5,
+                'hardflip': 3.2, 'inward heelflip': 3.2, 'tre flip': 3.5, '360 flip': 3.5, 'lazer flip': 3.8, 'laser flip': 3.8,
+                'nollie flip': 3.0, 'nollie heelflip': 3.0, 'switch flip': 3.0, 'switch heelflip': 3.0, 'fakie flip': 2.8, 'fakie heelflip':2.8,
+                'fakie tre': 3.6, 'nollie tre': 3.8, 'switch tre': 4.0,
+                'crooked grind': 3.2, 'overcrook': 3.3, 'bluntslide': 3.5, 'noseblunt': 3.5, 'darkslide': 4.0,
+                '540': 4.0, '720': 5.0, 'airs': 2.0, 'grab': 1.5, 'method air': 2.5, 'madonna': 3.0, 'japan air': 2.8,
+                'flip in': 0.5, 'flip out': 0.5, // Additive for grinds/slides
+
+                // Pro / Exceptional (8.5 - 10.0 points)
+                '900': 7.0, '1080': 8.0, '1260': 9.0, 'mctwist': 6.0, 'kickflip mctwist': 8.0,
+                'christ air': 5.0, 'elguerial': 6.5, 'caballerial': 4.5, 'varial mctwist': 7.0,
+                'tony hawk': 6.0, // Mentioning the name itself as a skill reference
+
+                // Scooter specific
+                'tailwhip': 3.0, 'double whip': 4.0, 'barspin': 2.0, 'flair': 4.0, 'buttercup': 2.5, 'bri flip': 3.5, 'fingerwhip': 2.2, 'scooter flip': 3.0,
+                // Rollerblade specific
+                'soul grind': 2.5, 'makio grind': 2.2, 'mistrial': 3.5, 'backslide': 2.8, 'unity': 2.7, 'savannah': 3.0, 'topside soul': 3.2, 'royale': 2.9, 'bio': 4.0, 'misty flip': 4.5
+            };
+
+            let currentRawScore = 0;
+            const foundTricks = new Set();
+
+            // Check for "flip in" / "flip out" to apply as multipliers later
+            let hasFlipIn = /\bflip in\b/.test(tricksText);
+            let hasFlipOut = /\bflip out\b/.test(tricksText);
+
+            for (const trick in trickValues) {
+                // Regex to match whole words or hyphenated terms, case insensitive
+                const regex = new RegExp(`\\b${trick.replace(/\s/g, '[\\s-]?')}\\b`, 'gi'); 
+                if (regex.test(tricksText)) {
+                    currentRawScore += trickValues[trick];
+                    foundTricks.add(trick);
+                }
+            }
+            
+            // Add bonus for flip in/out if grinds/slides are mentioned
+            if ((hasFlipIn || hasFlipOut) && (foundTricks.has('50-50 grind') || foundTricks.has('boardslide') || foundTricks.has('lipslide') || foundTricks.has('nosegrind'))) {
+                 currentRawScore += (hasFlipIn ? 1.5 : 0) + (hasFlipOut ? 1.5 : 0);
+            }
+
+
+            // Bonus for quantity of unique tricks
+            if (foundTricks.size > 3) currentRawScore += (foundTricks.size - 3) * 0.1;
+            if (foundTricks.size > 7) currentRawScore += (foundTricks.size - 7) * 0.2;
+            if (foundTricks.size > 12) currentRawScore += (foundTricks.size - 12) * 0.3;
+            if (foundTricks.size > 18) currentRawScore += (foundTricks.size - 18) * 0.4;
+
+
+            let finalScore;
+            
+            // Special handling for "Tony Hawk" or his signature tricks
+            const isTonyHawkLevel = foundTricks.has('tony hawk') || foundTricks.has('900') || foundTricks.has('mctwist') || foundTricks.has('1080');
+
+            if (isTonyHawkLevel && foundTricks.size >=2) { // TH or signature tricks + at least one other trick
+                finalScore = 8.7 + (currentRawScore / 40); // Base of 8.7, raw score of 20 gives ~9.2
+                finalScore = Math.min(finalScore, 9.5); // Cap for TH level
+                if (foundTricks.has('tony hawk') && foundTricks.size < 4 && !foundTricks.has('900')) { // Just "Tony Hawk" and few others
+                    finalScore = 9.0;
+                }
+            } else {
+                // General scaling: map raw score to 0-10.
+                // Max raw score for a "normal pro" might be around 30-40. Exceptional might be 50+.
+                if (currentRawScore < 1)       finalScore = currentRawScore * 2.0; // Max 2.0 for raw score < 1 (e.g. ollie = 1.5 -> 3.0 scaled is too high)
+                                                // Let's adjust this part to be more granular at low end
+                else if (currentRawScore < 0.5) finalScore = currentRawScore * 1.0; // e.g. "roll" = 0.1
+                else if (currentRawScore < 2.0) finalScore = 0.5 + (currentRawScore - 0.5) * 1.0; // ollie (1.5) = 0.5 + 1*1 = 1.5
+                else if (currentRawScore < 5)   finalScore = 1.5 + (currentRawScore - 2.0) * 0.8; // kickflip (2.5) + ollie(1.5)=4 -> 1.5 + 2*0.8 = 3.1
+                else if (currentRawScore < 10)  finalScore = 3.9 + (currentRawScore - 5.0) * 0.5; // Several intermediate tricks
+                else if (currentRawScore < 20)  finalScore = 6.4 + (currentRawScore - 10.0) * 0.20; // Advanced tricks
+                else if (currentRawScore < 30)  finalScore = 8.4 + (currentRawScore - 20.0) * 0.08; // Getting close to pro
+                else if (currentRawScore < 45)  finalScore = 9.2 + (currentRawScore - 30.0) * 0.04; // Pro level
+                else                            finalScore = 9.8 + (currentRawScore - 45.0) * 0.02; // Legendary
+            }
+            
+            finalScore = Math.min(10.0, Math.max(0.0, finalScore));
+
+            // If they only list "Tony Hawk" or "900" with nothing else specific.
+            if (tricksText.trim() === "tony hawk" || (tricksText.includes("tony hawk") && foundTricks.size <= 1 )) finalScore = 9.0;
+            if (tricksText.trim() === "900" || (tricksText.includes("900") && foundTricks.size <=1)) finalScore = 9.0;
+
+
+            // Final check for very low scores if something was actually listed
+            if (finalScore < 0.5 && foundTricks.size > 0 && !tricksText.match(/\b(no|none|never|can't|cannot|nothing|haven't|zero|beginner|barely stand|just starting)\b/i)) {
+                 finalScore = 0.5; // Give at least 0.5 if they listed *any* recognizable trick.
+            }
+
+
+            return finalScore.toFixed(1);
+        }
+
+        function getFeedbackMessage(score) {
+            if (score <= 0.0) return "Looks like you're just getting started, or maybe today's not your day! Keep at it!";
+            if (score <= 1.0) return "You're on the board! Focus on those fundamentals, every pro started here.";
+            if (score <= 2.5) return "Getting comfortable! You've got the basics down. Time to add some flair!";
+            if (score <= 4.0) return "Solid! You're definitely rolling with confidence. What's next on your trick list?";
+            if (score <= 5.5) return "Nice! You're linking tricks and starting to look smooth. Keep pushing!";
+            if (score <= 7.0) return "Impressive! You've got a good bag of tricks and probably turn heads at the park.";
+            if (score <= 8.5) return "Seriously skilled! You're shredding with style and consistency. True park rat!";
+            if (score < 9.0) return "Whoa, are you sponsored yet? Your skills are top-tier!";
+            if (score === 9.0) return "Is that you, Tony?! Legendary status confirmed!";
+            if (score <= 9.5) return "You're operating on a whole other level. Absolutely phenomenal!";
+            if (score <= 10.0) return "GOAT! You're pushing the boundaries of what's possible. We're not worthy!";
+            return "Something's off, try again!";
+        }
+
+    </script>
 </body>
 </html>
