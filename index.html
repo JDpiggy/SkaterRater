@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKILL_RATER.EXE</title>
+    <title>SKATERATER</title>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         body {
@@ -171,7 +171,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>SKILL_RATER.EXE</h1>
+        <h1>SKATE_RATER.exe</h1>
 
         <select id="discipline">
             <option value="skateboard">Skateboard</option>
@@ -313,18 +313,19 @@
             return finalScore.toFixed(1);
         }
 
-        function getFeedbackMessage(score) {
-            if (score <= 0.0) return "SYS_INIT: No skill data detected. Engage beginner protocols.";
-            if (score <= 1.0) return "INPUT: Basic motor functions engaged. Establishing baseline connection to board/wheels.";
-            if (score <= 2.5) return "ANALYSIS: Core maneuvers online. Recommend expanding trick_database.dll.";
-            if (score <= 4.0) return "STATUS: Proficiency detected. User exhibiting controlled navigation and elementary stunts.";
-            if (score <= 5.5) return "ASSESSMENT: Intermediate skill-set confirmed. Flow and combination potential increasing.";
-            if (score <= 7.0) return "EVALUATION: Advanced routines processing. User is a significant presence in local node (skatepark).";
-            if (score <= 8.5) return "WARNING: High skill threshold surpassed. User may be operating beyond standard human parameters.";
-            if (score <= 9.2) return "CRITICAL: Elite skill level. Connection to 'The Mainframe' (pro circuit) likely."; // Adjusted threshold
-            if (score <= 9.7) return "TRANSCENDENCE_PROTOCOL: Skill levels are off the charts. You redefine the physics engine."; // TH level
-            if (score <= 10.0) return "SYSTEM_OVERLOAD: // G.O.A.T_DETECTED // You are the architect of this reality. All hail!";
-            return "ERR: Parsing_failed. Resubmit_data_packet.";
+                function getFeedbackMessage(score) {
+            if (score <= 0.0) return "Looks like you're just getting started, Keep at it!";
+            if (score <= 1.0) return "You're on the board! Focus on those fundamentals, every pro started here.";
+            if (score <= 2.5) return "Getting comfortable! You've got the basics down. Time to add some flair!";
+            if (score <= 4.0) return "Solid! You're definitely rolling with confidence. What's next on your trick list?";
+            if (score <= 5.5) return "Nice! You're linking tricks and starting to look smooth. Keep pushing!";
+            if (score <= 7.0) return "Impressive! You've got a nice set of tricks and probably turn heads at the park.";
+            if (score <= 8.5) return "Seriously skilled! You're shredding with style and consistency. True park rat!";
+            if (score < 9.0) return "Whoa, are you sponsored yet? Your skills are top-tier!";
+            if (score === 9.0) return "Is that you, Tony?! Legendary status confirmed!";
+            if (score <= 9.5) return "You're operating on a whole other level. Absolutely phenomenal!";
+            if (score <= 10.0) return "GOAT! You're pushing the boundaries of what's possible. We're not worthy!";
+            return "Something's off, try again!";
         }
 
     </script>
